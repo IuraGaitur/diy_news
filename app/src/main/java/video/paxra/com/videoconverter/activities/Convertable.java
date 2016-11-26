@@ -5,8 +5,8 @@ package video.paxra.com.videoconverter.activities;
  */
 public interface Convertable {
     void onStartConvert();
-    void onProgressConvert();
-    void onFailureConvert();
-    void onSuccessConvert();
+    void onProgressConvert(String message);
+    void onFailureConvert(String message);
+    void onSuccessConvert(String message);
     void onFinishConvert();
 }

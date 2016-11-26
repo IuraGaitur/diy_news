@@ -40,7 +40,7 @@
             android:orientation="vertical">
 
             <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
-                android:id="@+id/videoview"
+                android:id="@+id/shareVideoView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
 
@@ -98,7 +98,7 @@
                 android:background="@drawable/btn_oval"
                 android:text="Salveaza"
                 android:textAllCaps="false"
-                android:textColor="@android:color/black"
+                android:textColor="@color/dark_gray"
                 android:textSize="16sp" />
 
             <include

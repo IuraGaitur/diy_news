@@ -18,11 +18,11 @@
         android:layout_height="250dp"
         android:layout_centerInParent="true"
         app:max="100"
-        app:ringColor="@android:color/background_dark"
-        app:ringProgressColor="@color/gray"
+        app:ringColor="@android:color/darker_gray"
+        app:ringProgressColor="@color/white"
         app:ringWidth="3dp"
         app:style="STROKE"
-        app:textColor="@color/gray"
+        app:textColor="@color/white"
         app:textIsShow="true"
         app:textSize="22sp" />
 
@@ -34,10 +34,11 @@
         android:layout_weight="3">
 
     <Button
+        android:id="@+id/btn_cancel"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Cancel"
-        android:textColor="@android:color/black"
+        android:textColor="@color/black_gray"
         android:textSize="22sp"
         android:textAllCaps="false"
         android:layout_centerHorizontal="true"

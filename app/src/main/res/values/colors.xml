@@ -48,7 +48,7 @@
     <color name="nero">#262626</color>
     <color name="nero_semi">#bb262626</color>
     <color name="aluminium">#929292</color>
-    <color name="black_gray">#1E1E1E</color>
+    <color name="black_gray">#646464</color>
     <color name="nero_transp">#402D2D2D</color>
     <color name="gray_white">#d8d8d8</color>
     <color name="gray_light">#e8e8e8</color>
@@ -58,7 +58,7 @@
     <color name="primary_dark">@android:color/black</color>
     <color name="control_highlight">@color/red</color>
 
-    <color name="yellow">#FCF028</color>
+    <color name="yellow">#FCF029</color>
 
     <color name="transparent_black_five">#0D000000</color>
     <color name="transparent_black_ten">#1A000000</color>
@@ -68,7 +68,9 @@
     <color name="transparent_black_sixty">#99000000</color>
     <color name="transparent_black_seventy">#B3000000</color>
     <color name="green">#00D16B</color>
-    <color name="gray">#AAAAAA</color>
+    <color name="gray">#f2f2f2</color>
+    <color name="dark_gray">#acacac</color>
+    <color name="gray_dark">#333333</color>
     <color name="transparent_black_eighty">#CC000000</color>
     <color name="transparent_black_ninty">#E6000000</color>
     <color name="transparent_black_ninty_five">#F2000000</color>

@@ -42,9 +42,7 @@ public class MenuActivity extends AppCompatActivity {
 
     @OnClick(R.id.action_import)
     public void actionImportClick(View view) {
-        Intent intent = new Intent();
-        intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60);
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, REQUEST_FILE_PICKER);
     }
 
@@ -61,11 +59,9 @@ public class MenuActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 700) {
             Uri videoUri = data.getData();
             filePath = PathUtil.getRealPathFromURI(this, videoUri);
-            Intent intent = new Intent(MenuActivity.this, MainActivity.class);
+            Intent intent = new Intent(MenuActivity.this, CropActivity.class);
             intent.putExtra(TAG_FILE_URI, filePath);
             startActivity(intent);
         }
-        return;
-
     }
 }

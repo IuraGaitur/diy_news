@@ -6,48 +6,11 @@
 
 
     <ImageView
-        android:id="@+id/view_3"
-        android:layout_width="5dp"
-        android:layout_height="5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="2dp"
-        android:src="@drawable/ic_circle_big" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/divider"/>
 
-    <ImageView
-        android:id="@+id/view_4"
-        android:layout_width="3dp"
-        android:layout_height="3dp"
-        android:layout_margin="2dp"
-        android:layout_toRightOf="@id/view_3"
-        android:src="@drawable/ic_circle_small" />
-
-    <View
-        android:id="@+id/view_5"
-        android:layout_width="22dp"
-        android:layout_height="1dp"
-        android:layout_alignTop="@+id/view_4"
-        android:layout_margin="2dp"
-        android:layout_toRightOf="@+id/view_4"
-        android:background="@color/gray" />
-
-    <ImageView
-        android:id="@+id/view_2"
-        android:layout_width="3dp"
-        android:layout_height="3dp"
-        android:layout_margin="2dp"
-        android:layout_toLeftOf="@id/view_3"
-        android:src="@drawable/ic_circle_small" />
-
-    <View
-        android:id="@+id/view_1"
-        android:layout_width="22dp"
-        android:layout_height="1dp"
-        android:layout_alignTop="@+id/view_2"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="2dp"
-        android:layout_toLeftOf="@id/view_2"
-        android:background="@color/gray"
-        android:text="_______" />
 
 
 </RelativeLayout>

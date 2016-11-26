@@ -14,6 +14,7 @@
         android:background="@color/transparent_black_eighty">
 
         <ImageView
+            android:id="@+id/back_btn"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
@@ -45,9 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/header" />
 
-            <fragment
+            <FrameLayout
                 android:id="@+id/questionFragment"
-                android:name="video.paxra.com.videoconverter.fragments.QuestionsFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/videoFragment" />

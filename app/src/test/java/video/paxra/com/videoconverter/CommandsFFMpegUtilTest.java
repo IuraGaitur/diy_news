@@ -6,8 +6,13 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
+
 import static org.junit.Assert.*;
 import video.paxra.com.videoconverter.utils.CommandsFFMpegUtil;
+import video.paxra.com.videoconverter.utils.AndroidUtilities;
+import video.paxra.com.videoconverter.utils.StringUtils;
 
 /**
  * Created by iura on 7/3/16.
@@ -20,23 +25,43 @@ public class CommandsFFMpegUtilTest extends TestCase{
     }
 
     @Test
-    public void testBuildCommand() {
-        String input = "";
-        String output = "";
-        String[] texts = new String[]{};
-        String color = "";
+    public void testNumberLinesReturnEqual() {
+        int expectedResult = 1;
+        String text = "O grupa de activisti din Republica Moldova";
+        int actualResult = AndroidUtilities.getNumberOfLines(text, 480, 720, 20);
 
-        String[] expected = ("-i input.mp4 -vf \"[in]drawtext=enable='between(t,3,9)':" +
-                "fontfile=/home/iura/Downloads/font.ttf:text='La biblioteca > centrala': " +
-                "fontcolor=white: fontsize=24: box=1: boxcolor=black@0.5:boxborderw=5: x=(w-text_w)/2:" +
-                " y=(h-text_h)/2, drawtext=enable='between(t,3,9)':fontfile=/home/iura/Downloads/font.ttf:text='L " +
-                "final': fontcolor=white: fontsize=24: box=1: boxcolor=black@0.5:boxborderw=5: x=(w-text_w)/5: y=20\" " +
-                "-codec:v libx264 -crf 21 -bf 2 -flags +cgop -pix_fmt yuv420p -codec:a aac -strict -2 -b:a 384k -r:a " +
-                "48000 -movflags faststart output.mp4").split(" ");
 
-        String[] actual = CommandsFFMpegUtil.buildCommand(input, output, texts, color);
+        Assert.assertEquals("Number lines are equals", expectedResult, actualResult);
+    }
 
-        Assert.assertArrayEquals("Strings are equal", expected, actual);
+    @Test
+    public void testXStartPositionReturnEqual() {
+        int expectedResult = 100;
+        String text = "Au declara ca nu sunt buni de nimic si de";
+        int actualResult = AndroidUtilities.getXStartPosition(text, 480, 20);
+
+
+        Assert.assertEquals("X Positions are equals", expectedResult, actualResult);
+    }
+
+    @Test
+    public void testYStartPositionReturnEqual() {
+        int expectedResult = 100;
+        String text = "La monumentul de la gara de nord s-a intimplat o catastrofa de tip mare de aceea socot ca nu e nevoie de facut";
+        int actualResult = AndroidUtilities.getYStartPosition(720, 2, 3, 20, 10);
+
+
+        Assert.assertEquals("Y Positions are equals", expectedResult, actualResult);
+    }
+
+    @Test
+    public void testCutStringReturnEqual() {
+        int expectedResult = 100;
+        String text = "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa";
+        List<String> actualResult = StringUtils.splitStringIntoParts(text, 2);
+
+
+        Assert.assertEquals("Y Positions are equals", expectedResult, actualResult);
     }
 
     @Test

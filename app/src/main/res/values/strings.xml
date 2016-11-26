@@ -8,15 +8,17 @@
     <string name="question_2">Unde?</string>
     <string name="tip_2">Chișinău</string>
     <string name="question_3">Cine participă la acțiune? Ce s-a întâmplat?</string>
-    <string name="tip_3">Transportul public nocturn din Chișinău nu va circula de pe 1 iulie</string>
+    <string name="tip_3">Transportul public </string>
     <string name="question_4">De ce?</string>
-    <string name="tip_4">Primăria nu și-a respectat promisiunea dată la ședința Primăriei din 27 iunie</string>
+    <string name="tip_4">Primăria nu și-a respectat</string>
     <string name="question_5">Declarație martor sau persoană implicată</string>
-    <string name="tip_5">Gheorghe Morgoci, șeful RTEC: „Am declarat și am declarat! Care-i problema?</string>
+    <string name="tip_5">Informatie adaugatoare</string>
     <string name="question_6">Detalii semnificative</string>
-    <string name="tip_6">El trebuia să prezinte un proiect de decizie în acest sens la comisia de profil</string>
+    <string name="tip_6">Semnificativ</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="generated">Video generat cu succes</string>
+
+    <string name="facebook_app_id">1081344738613033</string>
 </resources>
