@@ -1,12 +1,17 @@
 package video.paxra.com.videoconverter.activities;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +23,11 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +59,8 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     private int mVideoWidth = 0;
     private int mVideoHeight = 0;
 
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_FILES = 800;
+
     private Handler mConvertHandler;
     private Runnable mConvertRunnable = new Runnable() {
         @Override
@@ -63,13 +75,47 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_converter);
         ButterKnife.inject(this);
+        initializeConvertion();
         answers = (ArrayList<Answer>) getIntent().getSerializableExtra(QuestionsFragment.TAG_ANSWERS);
         fileName = getIntent().getStringExtra(QuestionsFragment.TAG_FILE);
         mStartVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_START_POS, 0);
         mEndVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_END_POS, 0);
         mVideoWidth = getIntent().getExtras().getInt(CropActivity.TAG_WIDTH, 0);
         mVideoHeight = getIntent().getExtras().getInt(CropActivity.TAG_HEIGHT, 0);
-        initializeConvertingLibrary(this);
+    }
+
+    private void initializeConvertion() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_FILES);
+            }
+        }else {
+            copyAssets();
+            initializeConvertingLibrary(this);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_FILES: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    copyAssets();
+                    initializeConvertingLibrary(this);
+                } else {
+                    Toast.makeText(this, "You need Write permission in order to start converting video", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+        }
     }
 
 
@@ -80,6 +126,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
                 Intent intent = new Intent(ConvertActivity.this, ShareActivity.class);
                 intent.putExtra(MenuActivity.TAG_FILE_URI, outputFileName);
                 startActivity(intent);
+                finish();
             }
         }, 2000);
     }
@@ -161,8 +208,8 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     }
 
     public void initializeConvertingVideo(Context context, ArrayList<Answer> answers, String fileName) {
-        String image = getExternalFilesDir(null) + "/icon_last.png";;
-        String fontFile = this.getExternalFilesDir(null) + "/font.ttf";
+        String image = getExternalFilesDir(null) + "/icon_trans.png";;
+        String fontFile = this.getExternalFilesDir(null) + "/AvenirNext-Regular.ttf";
         // Generate random file name for video
         outputFileName = fileName.split("\\.")[fileName.split("\\.").length - 1 ];
         String pattern = "MM_dd_yyyy";
@@ -209,6 +256,54 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
                 mConvertHandler.post(mConvertRunnable);
             }
         }, fileName);
+    }
+
+    private void copyAssets() {
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", "Failed to get asset file list.", e);
+        }
+        if (files != null) for (String filename : files) {
+            if(!filename.contains(".ttf") && ! filename.contains(".png"))
+                continue;
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = assetManager.open(filename);
+                String path = getExternalFilesDir(null).getPath();
+                File outFile = new File(getExternalFilesDir(null), filename);
+                out = new FileOutputStream(outFile);
+                copyFile(in, out);
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+            finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+            }
+        }
+    }
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
     }
 
 

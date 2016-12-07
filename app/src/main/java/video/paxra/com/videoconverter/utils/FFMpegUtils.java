@@ -10,14 +10,17 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunnin
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import video.paxra.com.videoconverter.activities.ConvertActivity;
 import video.paxra.com.videoconverter.activities.Convertable;
 import video.paxra.com.videoconverter.activities.MainActivity;
+import video.paxra.com.videoconverter.models.Answer;
 
 /**
  * Created by iura on 9/30/16.
@@ -146,6 +149,41 @@ public class FFMpegUtils {
             return time / 3600 + ":" + time % 60 + ":" + time % 3600;
         }
         return "00:00:00";
+    }
+
+    public static ArrayList<Answer> calculateTimeShowForText(ArrayList<Answer> answers, int videoLenght) {
+        int listSize = answers.size() - 2;
+        int padding = 2;
+        //parts represent a text showing and a time between
+        int totalParts = listSize + (listSize - 1);
+        //get 4 second for time as intro and ending
+        int videoTimeWithPadding = videoLenght - (padding * 2);
+
+        List<Integer> timeText = new ArrayList<>();
+        int totalTimeTexts = 0;
+        //start from 2 because first two text ar as headers
+        for (int i = 2; i < answers.size(); i++) {
+            int time = (answers.get(i).getAnswer().length() / 18) + 1;
+            totalTimeTexts += time;
+            timeText.add(time);
+
+        }
+
+
+        int videoTimeWithoutPaddingAndText = videoTimeWithPadding - totalTimeTexts;
+        int timeForPause = videoTimeWithoutPaddingAndText / (answers.size() - 2);
+
+        int startTime = padding;
+        for (int i = 2; i < answers.size(); i++) {
+            int time = (answers.get(i).getAnswer().length() / 18) + 1;
+            answers.get(i).setFrom(startTime);
+            answers.get(i).setTo(startTime + time);
+            startTime += time + timeForPause;
+        }
+
+
+        return answers;
+
     }
 }
 

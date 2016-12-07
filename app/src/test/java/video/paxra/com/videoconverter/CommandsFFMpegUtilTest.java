@@ -1,17 +1,22 @@
 package video.paxra.com.videoconverter;
 
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import junit.framework.TestCase;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+
+import video.paxra.com.videoconverter.models.Answer;
 import video.paxra.com.videoconverter.utils.CommandsFFMpegUtil;
 import video.paxra.com.videoconverter.utils.AndroidUtilities;
+import video.paxra.com.videoconverter.utils.FFMpegUtils;
 import video.paxra.com.videoconverter.utils.StringUtils;
 
 /**
@@ -23,6 +28,28 @@ public class CommandsFFMpegUtilTest extends TestCase{
     protected void setUp() throws Exception {
         super.setUp();
     }
+
+    @Test
+    public void testCalculateTimeForText() {
+        List<Answer> expectedResult = null;
+        String text = "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa";
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer(1, "2012-05-14", "header"));
+        answers.add(new Answer(2, "Chisinau, Moldova", "header"));
+        answers.add(new Answer(3, "O grupa de activisti din Republica Moldova", "text"));
+        answers.add(new Answer(4, "Vreau unire cu Romania", "text"));
+        answers.add(new Answer(5, "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa", "text"));
+        //answers.add(new Answer(6, "Pot fi posibile incaierari dintre baieti", "text"));
+
+        List<Answer> actualResult = FFMpegUtils.calculateTimeShowForText(answers, 35);
+        for (Answer answer: actualResult) {
+            Log.d("Answer", answer.toString());
+        }
+
+        Assert.assertEquals("Text time are equals", expectedResult, actualResult);
+    }
+
+
 
     @Test
     public void testNumberLinesReturnEqual() {

@@ -3,6 +3,7 @@ package video.paxra.com.videoconverter.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -26,7 +28,10 @@ import video.paxra.com.videoconverter.activities.ConvertActivity;
 import video.paxra.com.videoconverter.activities.CropActivity;
 import video.paxra.com.videoconverter.activities.MainActivity;
 import video.paxra.com.videoconverter.activities.MenuActivity;
+import video.paxra.com.videoconverter.activities.TextTimelineActivity;
 import video.paxra.com.videoconverter.models.Answer;
+import video.paxra.com.videoconverter.utils.FFMpegUtils;
+import video.paxra.com.videoconverter.utils.StringUtils;
 
 /**
  * Created by iura on 10/3/16.
@@ -54,9 +59,12 @@ public class QuestionsFragment extends Fragment {
     @Optional
     @InjectView(R.id.btn_generate)
     Button mGenerateBtnView;
+    @InjectView(R.id.main_parent)
+    LinearLayout mLlvMainLView;
 
     public final static String TAG_ANSWERS = "answers";
     public static final String TAG_FILE = "file";
+    public static final String TAG_QUESTION_NUMBER = "question_number";
     ArrayList<Answer> mUserAnswers = null;
 
     private String videoUrl;
@@ -64,6 +72,7 @@ public class QuestionsFragment extends Fragment {
     private int mVideoHeight;
     private int mVideoStartPos;
     private int mVideoEndPos;
+    private View view;
 
     public QuestionsFragment() {
     }
@@ -99,7 +108,7 @@ public class QuestionsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_questions, null);
+        view = inflater.inflate(R.layout.fragment_questions, null);
         ButterKnife.inject(this, view);
         return view;
     }
@@ -107,6 +116,7 @@ public class QuestionsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        addEditTextFocusListeners();
         initDateEdit();
     }
 
@@ -115,11 +125,11 @@ public class QuestionsFragment extends Fragment {
         String validationMessage = "";
         Intent intent = new Intent(getActivity(), ConvertActivity.class);
 
-        if (!(validationMessage = validateInputs()).isEmpty()) {
-            Toast.makeText(getActivity(), validationMessage, Toast.LENGTH_SHORT).show();
+        if(!validateInputs()) {
             return;
         }
-        mUserAnswers = getAnswers();
+        mUserAnswers = getAnswers(mVideoEndPos - mVideoStartPos);
+
         intent.putExtra(TAG_ANSWERS, mUserAnswers);
         intent.putExtra(TAG_FILE, videoUrl);
         intent.putExtra(CropActivity.TAG_WIDTH, mVideoWidth);
@@ -138,25 +148,137 @@ public class QuestionsFragment extends Fragment {
         mAnswer1EditView.setText(value);
     }
 
-    public ArrayList<Answer> getAnswers() {
+    public ArrayList<Answer> getAnswers(int videoLength) {
         List<Answer> answers = new ArrayList<>();
+        int totalLength = 0;
 
-        answers.add(new Answer(1, mAnswer1EditView.getText().toString() + " " + mAnswer2EditView.getText().toString(), "header"));
-        answers.add(new Answer(2, mAnswer3EditView.getText().toString(), 1, 5, "text"));
-        answers.add(new Answer(3, mAnswer4EditView.getText().toString(), 6, 11, "text"));
-        answers.add(new Answer(4, mAnswer5EditView.getText().toString(), 12, 17, "text"));
-        answers.add(new Answer(5, mAnswer6EditView.getText().toString(), 18, 23, "text"));
+        if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
+            answers.add(new Answer(1, mAnswer1EditView.getText().toString(), "header"));
+            totalLength += mAnswer1EditView.getText().toString().length();
+        }
+        if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
+            answers.add(new Answer(2, mAnswer2EditView.getText().toString(), "header"));
+            totalLength += mAnswer2EditView.getText().toString().length();
+        }
+        if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
+            answers.add(new Answer(3, mAnswer3EditView.getText().toString().toUpperCase(), "text"));
+            totalLength += mAnswer3EditView.getText().toString().length();
+        }
+        if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
+            answers.add(new Answer(4, mAnswer4EditView.getText().toString().toUpperCase(), "text"));
+            totalLength += mAnswer4EditView.getText().toString().length();
+        }
+        if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
+            answers.add(new Answer(5, mAnswer5EditView.getText().toString().toUpperCase(), "text"));
+            totalLength += mAnswer5EditView.getText().toString().length();
+        }
+        if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
+            answers.add(new Answer(6, mAnswer6EditView.getText().toString().toUpperCase(), "text"));
+            totalLength += mAnswer6EditView.getText().toString().length();
+        }
 
+        answers = FFMpegUtils.calculateTimeShowForText((ArrayList)answers, videoLength);
 
         return (ArrayList<Answer>) answers;
     }
 
 
-    private String validateInputs() {
-        if (mAnswer1EditView.getText().toString().length() > 2 && mAnswer2EditView.getText().toString().length() > 5
-                && mAnswer3EditView.getText().toString().length() > 10) {
-            return "";
+
+    private boolean validateInputs() {
+
+        if (mAnswer1EditView.getText().toString().length() > 5) {
+            focusOnView(mAnswer1EditView);
+            mAnswer1EditView.requestFocus();
+            Toast.makeText(getActivity(), "Lungimea trebuie să depășeasca de 5 caractere", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return "Lungimea cimpurilor nu sunt suficient descrise";
+        if(mAnswer2EditView.getText().toString().length() > 5) {
+            focusOnView(mAnswer2EditView);
+            mAnswer2EditView.requestFocus();
+            Toast.makeText(getActivity(), "Lungimea trebuie să depășeasca de 5 caractere", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(mAnswer3EditView.getText().toString().length() > 10) {
+            focusOnView(mAnswer3EditView);
+            mAnswer3EditView.requestFocus();
+            Toast.makeText(getActivity(), "Lungimea trebuie să depășeasca de 10 caractere", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void addEditTextFocusListeners() {
+        mAnswer1EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (mAnswer1EditView.getText().toString().trim().length() < 5) {
+                        mAnswer1EditView.setError("Nu depășește 5 caractere");
+                    } else {
+                        // your code here
+                        mAnswer1EditView.setError(null);
+                    }
+                } else {
+                    if (mAnswer1EditView.getText().toString().trim().length() < 5) {
+                        mAnswer1EditView.setError("Nu depășește 5 caractere");
+                    } else {
+                        // your code here
+                        mAnswer1EditView.setError(null);
+                    }
+                }
+
+            }
+        });
+        mAnswer2EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (mAnswer2EditView.getText().toString().trim().length() < 5) {
+                        mAnswer1EditView.setError("Nu depășește 5 caractere");
+                    } else {
+                        // your code here
+                        mAnswer2EditView.setError(null);
+                    }
+                } else {
+                    if (mAnswer2EditView.getText().toString().trim().length() < 5) {
+                        mAnswer2EditView.setError("Nu depășește 5 caractere");
+                    } else {
+                        // your code here
+                        mAnswer2EditView.setError(null);
+                    }
+                }
+
+            }
+        });
+        mAnswer3EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (mAnswer3EditView.getText().toString().trim().length() < 5) {
+                        mAnswer3EditView.setError("Nu depășește 5 caractere");
+                    } else {
+                        // your code here
+                        mAnswer3EditView.setError(null);
+                    }
+                } else {
+                    if (mAnswer3EditView.getText().toString().trim().length() < 5) {
+                        mAnswer3EditView.setError("Nu depășește 5 caractere");
+                    } else {
+                        // your code here
+                        mAnswer3EditView.setError(null);
+                    }
+                }
+
+            }
+        });
+    }
+
+    private final void focusOnView(final EditText editText){
+        mLlvMainLView.post(new Runnable() {
+            @Override
+            public void run() {
+                mLlvMainLView.scrollTo(0, editText.getBottom());
+            }
+        });
     }
 }

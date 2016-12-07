@@ -1,5 +1,6 @@
 package video.paxra.com.videoconverter.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
@@ -31,10 +33,13 @@ public class MainActivity extends AppCompatActivity {
     private int mVideoWidth = 0;
     private int mVideoHeight = 0;
 
+    public static final int REQUEST_TRIM = 400;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
         extractBundleData();
         mVideoFragment = VideoFragment.newInstance(fileUri, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
         getFragmentManager().beginTransaction().add(R.id.videoFragment, mVideoFragment).commit();
@@ -78,4 +83,14 @@ public class MainActivity extends AppCompatActivity {
         view.setText(wordtoSpan);
 
     }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_TRIM) {
+            //mQuestionFragment;
+            int[] result = data.getIntArrayExtra("data");
+            Log.d("Result", result.toString());
+        }
+    }
+
 }

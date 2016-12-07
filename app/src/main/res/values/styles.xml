@@ -58,9 +58,8 @@
     </style>
 
     <style name="edit_questions">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">9</item>
         <item name="android:background">@drawable/img_rounded</item>
         <item name="android:ems">10</item>
         <item name="android:inputType">textMultiLine</item>

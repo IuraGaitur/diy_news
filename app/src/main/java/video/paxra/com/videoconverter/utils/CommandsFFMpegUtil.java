@@ -17,8 +17,9 @@ public class CommandsFFMpegUtil {
         StringBuilder result = new StringBuilder();
         String fromTimeFormatted = FFMpegUtils.formatTimeForFFmpeg(cropFrom);
         String endTimeFormatted = FFMpegUtils.formatTimeForFFmpeg(cropTo);
-        int fontSize = 20;
+        int fontSize = 34;
         int paddingBottom = 20;
+        int videoDuration = cropTo - cropFrom;
         //inputFile = inputFile.replace("file://", "");
         //outputFile = outputFile.replace("file://", "");
 
@@ -36,44 +37,46 @@ public class CommandsFFMpegUtil {
 
         //result.setLength(0);
 
-
         //add middle condition
         result.append("[0:]overlay=10:10,");
 
-        int time = 1;
-        for (int i = 0; i < answers.size(); i++) {
+        for (int i = 1; i < answers.size(); i++) {
 
             int lineNumber = AndroidUtilities.getNumberOfLines(answers.get(i).answer, screenWidth, screenHeight, fontSize);
             int xPos = AndroidUtilities.getXStartPosition(answers.get(i).answer, screenWidth, fontSize);
             int yPos = AndroidUtilities.getYStartPosition(screenHeight, 1, lineNumber, fontSize, paddingBottom);
-            Log.d("Information","Width:" + screenWidth + ";Height:" + screenHeight +
-                    ";lineNum:" + lineNumber + ";xPos" + xPos +";yPos:"+ yPos);
+            Log.d("Information", "Width:" + screenWidth + ";Height:" + screenHeight + ";lineNum:" + lineNumber + ";xPos" + xPos + ";yPos:" + yPos);
             String item = "";
 
-            if(i==0) {
+            if (i == 1) {
                 item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                                ": fontcolor=black: fontsize=" + fontSize + ": box=1: boxcolor=yellow@0.5:boxborderw=5: x=(w-text_w)/1.15: y=30",
-                        time, time + 2, fontFile, answers.get(i).answer);
+                                ": fontcolor=white: fontsize=" + (fontSize - 5) + ": x=(w-text_w)/1.15: y=30,",
+                        0, videoDuration, fontFile, answers.get(0).answer);
                 result.append(item);
-            }else {
-
-                for(int j = 0;j < lineNumber;j++) {
+                item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
+                                ": fontcolor=white: fontsize=" + (fontSize - 5) + ": x=(w-text_w)/1.15: y=35 + th",
+                        0, videoDuration, fontFile, answers.get(1).answer);
+                result.append(item);
+            } else {
+                for (int j = 0; j < lineNumber; j++) {
                     List<String> cutAnswer = StringUtils.splitStringIntoParts(answers.get(i).answer, lineNumber);
                     xPos = AndroidUtilities.getXStartPosition(cutAnswer.get(j), screenWidth, fontSize);
                     yPos = AndroidUtilities.getYStartPosition(screenHeight, j, lineNumber, fontSize, paddingBottom);
 
                     item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                                    ": fontcolor=black: fontsize=" + fontSize + ": box=1: boxcolor=yellow@0.5:boxborderw=5: x=" + xPos + ": y=" + yPos,
-                            time, time + 2, fontFile, cutAnswer.get(j));
+                                    ": fontcolor=white: fontsize=" + fontSize + ": x=(w-tw)/2: y=" + yPos ,
+                            answers.get(i).getFrom(), answers.get(i).getTo(), fontFile, cutAnswer.get(j));
+                    if(j < lineNumber - 1) {
+                        item += ",";
+                    }
 
                     result.append(item);
-                    if (j < lineNumber - 1) {
-                        result.append(",");
-                    }
                 }
+
+                //String drawGrid = String.format("drawbox=enable='between(n,%d, %d)' : x=%d : y=%d : w=iw-20: h=ih-20 : color=yellow", time, time + 2, xPos, yPos);
+                //result.append(drawGrid);
             }
 
-            time += 3;
             //take all except the last one
             if (i < answers.size() - 1) {
                 result.append(",");

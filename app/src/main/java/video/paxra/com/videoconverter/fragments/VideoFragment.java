@@ -103,7 +103,8 @@ public class VideoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        JCVideoPlayer.releaseAllVideos();
+        mVideoView.release();
+        VideoPlayer.releaseAllVideos();
     }
 
     public void setVideoUri(String uri) {

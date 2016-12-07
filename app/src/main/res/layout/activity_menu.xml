@@ -23,7 +23,7 @@
             android:layout_height="140dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            app:pulse_color="#ffffff"
+            app:pulse_color="@color/yellow"
             app:pulse_count="4"
             app:pulse_duration="7000"
             app:pulse_interpolator="Linear"
@@ -43,14 +43,14 @@
 
         </video.paxra.com.videoconverter.views.PulsatorLayout>
 
-        <video.paxra.com.videoconverter.views.FontTextViewDemiBold
+        <video.paxra.com.videoconverter.views.FontTextViewRegular
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="FROM LIBRARY"
+            android:text="Din Librărie"
             android:layout_below="@id/pulsator1"
             android:textColor="@android:color/white"
-            android:textSize="22sp" />
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
@@ -66,7 +66,7 @@
             android:layout_height="140dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            app:pulse_color="#ffffff"
+            app:pulse_color="@color/yellow"
             app:pulse_count="4"
             app:pulse_duration="7000"
             app:pulse_interpolator="Linear"
@@ -84,13 +84,13 @@
                 android:background="@drawable/btn_circle_back"/>
         </video.paxra.com.videoconverter.views.PulsatorLayout>
 
-        <video.paxra.com.videoconverter.views.FontTextViewDemiBold
+        <video.paxra.com.videoconverter.views.FontTextViewRegular
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="RECORD VIDEO"
+            android:text="Înregistrează Video"
             android:layout_below="@id/pulsator2"
             android:textColor="@android:color/white"
-            android:textSize="22sp" />
+            android:textSize="20sp" />
     </RelativeLayout>
 </RelativeLayout>

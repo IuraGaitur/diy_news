@@ -1,12 +1,17 @@
 package video.paxra.com.videoconverter.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -15,6 +20,7 @@ import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.utils.TimeUtil;
+import video.paxra.com.videoconverter.views.VideoPlayer;
 import video.paxra.com.videoconverter.views.VideoTimelineView;
 
 public class CropActivity extends AppCompatActivity {
@@ -33,6 +39,8 @@ public class CropActivity extends AppCompatActivity {
     public static final String TAG_WIDTH = "width";
     public static final String TAG_HEIGHT = "height";
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_FILES = 900;
+
     private int mStartPos;
     private int mEndPos;
     private int mVideoWidth;
@@ -46,12 +54,49 @@ public class CropActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crop);
         path = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
         ButterKnife.inject(this);
-        loadVideo(path);
-        loadTimelineView(path);
+        loadTimeLine();
+    }
+
+
+    private void loadTimeLine() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Log.d("Permissions", "" + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE));
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_FILES);
+            }
+        }else {
+            loadVideo(path);
+            loadTimelineView(path);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_FILES: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadVideo(path);
+                    loadTimelineView(path);
+                } else {
+                    Toast.makeText(this, "Unable to start playing without proper permission", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+        }
     }
 
     private void loadVideo(String videoUrl) {
-        mVideoView.setUp(videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
+        mVideoView.setUp("file://" + videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
     }
 
 
@@ -59,6 +104,7 @@ public class CropActivity extends AppCompatActivity {
         mVideoTimelineView.setVideoPath(videoPath);
 
         mVideoDuration = mVideoTimelineView.getVideoLength();
+        mEndPos = (int)mVideoDuration;
         mToSecTextView.setText(TimeUtil.formatTime(mVideoDuration));
         mVideoWidth = mVideoTimelineView.getVideoWidth();
         mVideoHeight = mVideoTimelineView.getVideoHeight();
@@ -107,6 +153,14 @@ public class CropActivity extends AppCompatActivity {
         intent.putExtra(MenuActivity.TAG_FILE_URI, path);
         Log.d("Start and end", "" + mStartPos + ":" + mEndPos);
         startActivity(intent);
+        finish();
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mVideoView.release();
+        VideoPlayer.releaseAllVideos();
     }
 }

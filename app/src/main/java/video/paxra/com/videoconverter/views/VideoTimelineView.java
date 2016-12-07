@@ -167,8 +167,10 @@ public class VideoTimelineView extends View {
             mVideoHeight = Integer.parseInt(height);
             mVideoRotation = Integer.parseInt(rotation);
 
-        } catch (Exception e) {
-            Log.e("tmessages", e.getMessage());
+        } catch (Exception ex) {
+            String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
+            Log.e("sdcard-err2:",err);
+            //Log.e("tmessages", e.getMessage());
         }
     }
 

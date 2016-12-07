@@ -35,7 +35,7 @@ public class PulsatorLayout extends RelativeLayout {
     public static final int INTERP_ACCELERATE_DECELERATE = 3;
 
     private static final int DEFAULT_COUNT = 4;
-    private static final int DEFAULT_COLOR = Color.rgb(0, 116, 193);
+    private static final int DEFAULT_COLOR = Color.rgb(255, 255, 0);
     private static final int DEFAULT_DURATION = 7000;
     private static final int DEFAULT_REPEAT = INFINITE;
     private static final boolean DEFAULT_START_FROM_SCRATCH = true;
@@ -305,7 +305,7 @@ public class PulsatorLayout extends RelativeLayout {
             PulseView pulseView = new PulseView(getContext());
             pulseView.setScaleX(0);
             pulseView.setScaleY(0);
-            pulseView.setAlpha(1);
+            pulseView.setAlpha(0);
 
             addView(pulseView, index, layoutParams);
             mViews.add(pulseView);

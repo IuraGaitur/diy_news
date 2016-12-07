@@ -14,6 +14,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,6 +23,7 @@ import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerSimple;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import video.paxra.com.videoconverter.R;
+import video.paxra.com.videoconverter.views.VideoPlayer;
 
 public class ShareActivity extends AppCompatActivity {
 
@@ -62,18 +64,20 @@ public class ShareActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_save)
     public void saveVideo(View view) {
-        //insertFileInMediaStore(fileOutPath);
         showSaveDialog();
     }
 
 
     private void insertFileInMediaStore(String fileOutPath, String videoName) {
+        Log.d("Title", fileOutPath);
+        Log.d("Data", fileOutPath);
         ContentResolver cr = this.getContentResolver();
         ContentValues values = new ContentValues();
         values.put(MediaStore.Video.Media.TITLE, videoName);
         values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
         values.put(MediaStore.Video.Media.DATA, fileOutPath);
         cr.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        Toast.makeText(this, "Salvare completa", Toast.LENGTH_SHORT);
 
     }
 
@@ -105,23 +109,20 @@ public class ShareActivity extends AppCompatActivity {
     }
 
     public void shareVideo(Context context, String fileName) {
-
-        ContentValues content = new ContentValues(4);
-        content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
-                System.currentTimeMillis() / 1000);
-        content.put(MediaStore.Video.Media.TITLE, fileName.split("/")[fileName.split("/").length-1]);
-        content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-        content.put(MediaStore.Video.Media.DATA, fileName);
-        ContentResolver resolver = getBaseContext().getContentResolver();
-        Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
-
-        //Log.d("Share",);
-
+        Log.d("FileName", fileName);
+        Uri uri = Uri.parse(fileName);
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("video*//*");
+        sharingIntent.setType("video/mp4");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "#DIY News \n");
         sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(sharingIntent, "share:"));
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mVideoView.release();
+        VideoPlayer.releaseAllVideos();
     }
 }

@@ -66,4 +66,15 @@ public class Answer implements Serializable{
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", answer='" + answer + '\'' +
+                ", from=" + from +
+                ", to=" + to +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }
