@@ -20,11 +20,11 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/img_arrow" />
 
-        <TextView
+        <video.paxra.com.videoconverter.views.FontTextViewRegular
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="DIY News"
+            android:text="Distribuie Știrea"
             android:textColor="@color/primaryYellow"
             android:textSize="22sp" />
     </RelativeLayout>
@@ -53,7 +53,7 @@
                 android:padding="10dp"
                 android:visibility="visible">
 
-                <TextView
+                <video.paxra.com.videoconverter.views.FontTextViewDemiBold
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -79,7 +79,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/btn_oval_gray"
-                android:text="Distribuie"
+                android:text="Împarte"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
@@ -100,7 +100,7 @@
                 android:background="@drawable/btn_oval"
                 android:text="Salvează"
                 android:textAllCaps="false"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/primary_dark"
                 android:textSize="16sp" />
 
             <include

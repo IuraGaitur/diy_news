@@ -10,6 +10,19 @@
     android:background="@android:color/white"
     android:layout_marginRight="10dp">
 
+    <LinearLayout
+        android:id="@+id/tooltip_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:visibility="visible">
+
+        <video.paxra.com.videoconverter.views.FontTextViewDemiBold
+            style="@style/text_questions"
+            android:text="Răspunde la Intrebări"/>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -249,18 +262,7 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/tooltip_create"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:visibility="visible">
 
-        <video.paxra.com.videoconverter.views.FontTextViewDemiBold
-            style="@style/text_questions"
-            android:text="Răspunde la Intrebări"/>
-
-    </LinearLayout>
 
 
 </LinearLayout>

@@ -17,12 +17,9 @@ public class CommandsFFMpegUtil {
         StringBuilder result = new StringBuilder();
         String fromTimeFormatted = FFMpegUtils.formatTimeForFFmpeg(cropFrom);
         String endTimeFormatted = FFMpegUtils.formatTimeForFFmpeg(cropTo);
-        int fontSize = 34;
+        int fontSize = (960 + 540) / 50;
         int paddingBottom = 20;
         int videoDuration = cropTo - cropFrom;
-        //inputFile = inputFile.replace("file://", "");
-        //outputFile = outputFile.replace("file://", "");
-
 
         //add preconditions
         String startPart = String.format("-ss %s -t %s -i %s -i %s -filter_complex",
@@ -38,35 +35,40 @@ public class CommandsFFMpegUtil {
         //result.setLength(0);
 
         //add middle condition
-        result.append("[0:]overlay=10:10,");
+        int finalWidth = screenWidth > screenHeight ? 720 : 480;
+        int finalHeight = screenHeight > screenWidth ? 720 : 480;
+        result.append("[0:]scale=" + finalWidth + ":" + finalHeight + ",overlay=10:10,");
 
         for (int i = 1; i < answers.size(); i++) {
 
-            int lineNumber = AndroidUtilities.getNumberOfLines(answers.get(i).answer, screenWidth, screenHeight, fontSize);
-            int xPos = AndroidUtilities.getXStartPosition(answers.get(i).answer, screenWidth, fontSize);
-            int yPos = AndroidUtilities.getYStartPosition(screenHeight, 1, lineNumber, fontSize, paddingBottom);
-            Log.d("Information", "Width:" + screenWidth + ";Height:" + screenHeight + ";lineNum:" + lineNumber + ";xPos" + xPos + ";yPos:" + yPos);
+            int lineNumber = AndroidUtilities.getNumberOfLines(answers.get(i).answer, finalWidth, finalHeight, fontSize);
+            int yPos = AndroidUtilities.getYStartPosition(finalHeight, 1, lineNumber, fontSize, paddingBottom);
+            Log.d("Information", "Width:" + screenWidth + ";Height:" + screenHeight + ";lineNum:" + lineNumber + ";yPos:" + yPos);
             String item = "";
 
             if (i == 1) {
                 item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                                ": fontcolor=white: fontsize=" + (fontSize - 5) + ": x=(w-text_w)/1.15: y=30,",
-                        0, videoDuration, fontFile, answers.get(0).answer);
+                                ": fontcolor=white:shadowcolor=black:shadowx=1:shadowy=1: fontsize=" + (960+540)/60 +": x=(w-text_w)/1.07: y=30,", 0, videoDuration, fontFile, answers.get(0).answer);
                 result.append(item);
                 item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                                ": fontcolor=white: fontsize=" + (fontSize - 5) + ": x=(w-text_w)/1.15: y=35 + th",
-                        0, videoDuration, fontFile, answers.get(1).answer);
+                                ": fontcolor=white:shadowcolor=black:shadowx=1:shadowy=1: fontsize=" + (960+540)/60 + ": x=(w-text_w)/1.07: y=35 + th", 0, videoDuration, fontFile, answers.get(1).answer);
                 result.append(item);
             } else {
-                for (int j = 0; j < lineNumber; j++) {
-                    List<String> cutAnswer = StringUtils.splitStringIntoParts(answers.get(i).answer, lineNumber);
-                    xPos = AndroidUtilities.getXStartPosition(cutAnswer.get(j), screenWidth, fontSize);
-                    yPos = AndroidUtilities.getYStartPosition(screenHeight, j, lineNumber, fontSize, paddingBottom);
+                int charsPerLine = AndroidUtilities.getCharsPerLine(finalWidth, fontSize);
+                List<String> cutAnswer = StringUtils.splitStringIntoParts(answers.get(i).answer, lineNumber, charsPerLine);
+                for (int j = 0; j < cutAnswer.size(); j++) {
+                    yPos = AndroidUtilities.getYStartPosition(finalHeight, j, lineNumber, fontSize, paddingBottom);
 
-                    item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                                    ": fontcolor=white: fontsize=" + fontSize + ": x=(w-tw)/2: y=" + yPos ,
-                            answers.get(i).getFrom(), answers.get(i).getTo(), fontFile, cutAnswer.get(j));
-                    if(j < lineNumber - 1) {
+                    if (cutAnswer.size() == 1) {
+                        item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
+                                        ": fontcolor=yellow: fontsize=" + (960+540)/50 + ": x=(w-tw)/2: y=" + yPos,
+                                answers.get(i).getFrom(), answers.get(i).getTo(), fontFile, cutAnswer.get(j));
+                    } else {
+                        item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
+                                        ": fontcolor=yellow: fontsize=" + (960+540)/50 + ": x=(w / 20): y=" + yPos,
+                                answers.get(i).getFrom(), answers.get(i).getTo(), fontFile, cutAnswer.get(j));
+                    }
+                    if (j < cutAnswer.size() - 1) {
                         item += ",";
                     }
 
@@ -83,6 +85,7 @@ public class CommandsFFMpegUtil {
             }
         }
         //append this as command
+        //result.append("[ol];[ol] [outv]");
         data.add(result.toString());
         result.setLength(0);
 

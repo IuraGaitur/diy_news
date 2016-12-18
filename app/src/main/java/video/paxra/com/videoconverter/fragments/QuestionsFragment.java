@@ -1,6 +1,8 @@
 package video.paxra.com.videoconverter.fragments;
 
+import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -10,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -73,6 +78,8 @@ public class QuestionsFragment extends Fragment {
     private int mVideoStartPos;
     private int mVideoEndPos;
     private View view;
+    private String mDateValue = "";
+    private Calendar mVideoDate = Calendar.getInstance();
 
     public QuestionsFragment() {
     }
@@ -125,7 +132,7 @@ public class QuestionsFragment extends Fragment {
         String validationMessage = "";
         Intent intent = new Intent(getActivity(), ConvertActivity.class);
 
-        if(!validateInputs()) {
+        if (!validateInputs()) {
             return;
         }
         mUserAnswers = getAnswers(mVideoEndPos - mVideoStartPos);
@@ -177,56 +184,37 @@ public class QuestionsFragment extends Fragment {
             totalLength += mAnswer6EditView.getText().toString().length();
         }
 
-        answers = FFMpegUtils.calculateTimeShowForText((ArrayList)answers, videoLength);
+        answers = FFMpegUtils.calculateTimeShowForText((ArrayList) answers, videoLength);
 
         return (ArrayList<Answer>) answers;
     }
 
 
-
     private boolean validateInputs() {
 
-        if (mAnswer1EditView.getText().toString().length() > 5) {
+        if (mAnswer1EditView.getText().toString().length() < 5) {
             focusOnView(mAnswer1EditView);
             mAnswer1EditView.requestFocus();
-            Toast.makeText(getActivity(), "Lungimea trebuie să depășeasca de 5 caractere", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(mAnswer2EditView.getText().toString().length() > 5) {
+        if (mAnswer2EditView.getText().toString().length() < 5) {
             focusOnView(mAnswer2EditView);
             mAnswer2EditView.requestFocus();
-            Toast.makeText(getActivity(), "Lungimea trebuie să depășeasca de 5 caractere", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(mAnswer3EditView.getText().toString().length() > 10) {
+        if (mAnswer3EditView.getText().toString().length() < 5) {
             focusOnView(mAnswer3EditView);
             mAnswer3EditView.requestFocus();
-            Toast.makeText(getActivity(), "Lungimea trebuie să depășeasca de 10 caractere", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
     private void addEditTextFocusListeners() {
-        mAnswer1EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mAnswer1EditView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if (mAnswer1EditView.getText().toString().trim().length() < 5) {
-                        mAnswer1EditView.setError("Nu depășește 5 caractere");
-                    } else {
-                        // your code here
-                        mAnswer1EditView.setError(null);
-                    }
-                } else {
-                    if (mAnswer1EditView.getText().toString().trim().length() < 5) {
-                        mAnswer1EditView.setError("Nu depășește 5 caractere");
-                    } else {
-                        // your code here
-                        mAnswer1EditView.setError(null);
-                    }
-                }
-
+            public void onClick(View view) {
+                selectDate();
             }
         });
         mAnswer2EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -273,12 +261,65 @@ public class QuestionsFragment extends Fragment {
         });
     }
 
-    private final void focusOnView(final EditText editText){
+    private final void focusOnView(final EditText editText) {
         mLlvMainLView.post(new Runnable() {
             @Override
             public void run() {
                 mLlvMainLView.scrollTo(0, editText.getBottom());
             }
         });
+    }
+
+    private void selectDate() {
+
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        mVideoDate.set(Calendar.YEAR, year);
+                        mVideoDate.set(Calendar.MONTH, monthOfYear);
+                        mVideoDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        // Get Current Time
+                        final Calendar calendar = Calendar.getInstance();
+                        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+                        int mMinute = calendar.get(Calendar.MINUTE);
+
+                        // Launch Time Picker Dialog
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                                new TimePickerDialog.OnTimeSetListener() {
+
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                                          int minute) {
+                                        mVideoDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                        mVideoDate.set(Calendar.MINUTE, minute);
+                                        setTimeEditText(mVideoDate);
+                                    }
+                                }, mHour, mMinute, false);
+                        timePickerDialog.show();
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+
+
+
+
+    }
+
+    private void setTimeEditText(Calendar calendar) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+        String dateFormated = dateFormat.format(calendar.getTime());
+        mAnswer1EditView.setText(dateFormated);
     }
 }

@@ -24,7 +24,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         AndroidUtilities.checkDisplaySize(this, this.getResources().getConfiguration());
-        //copyAssets();
 
         new Handler().postDelayed(new Runnable() {
             @Override

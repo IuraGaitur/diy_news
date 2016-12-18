@@ -8,10 +8,10 @@ import java.util.List;
  */
 
 public class StringUtils {
-    public static List<String> splitStringIntoParts(String text, int times) {
+    public static List<String> splitStringIntoParts(String text, int times, int charsPerLine) {
         List<String> strings = new ArrayList<String>();
 
-        int divider = (text.length() / times) + 1;
+        int divider = charsPerLine;
 
         int index = 0;
         while (index < text.length()) {

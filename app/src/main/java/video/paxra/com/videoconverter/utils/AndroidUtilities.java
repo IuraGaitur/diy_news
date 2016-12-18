@@ -63,26 +63,24 @@ public class AndroidUtilities {
 
     public static int getXStartPosition(String text, int videoWidth, int fontSize) {
         int textLength = text.length();
-
-        //int widthWithoutPadding = videoWidth - (videoWidth * 10 / 100);// get 10% for padding
-        int startPos = (videoWidth - (textLength * fontSize /2)) / 2;
-
-        //if(startPosition  < 30) return 30;
-
+        int startPos = (videoWidth - (textLength * fontSize / 2)) / 2;
         return startPos;
 
     }
 
     public static int getYStartPosition(int videoHeight, int lineNumber, int totalLines, int fontSize, int padding) {
-        int heightWithoutPadding = videoHeight - (videoHeight * 5 / 100);
+        int heightWithoutPadding = videoHeight - (videoHeight * 2 / 100);
         heightWithoutPadding = heightWithoutPadding - fontSize - ((totalLines - lineNumber) * fontSize  + padding) - ((totalLines - lineNumber) * 6);
         return heightWithoutPadding;
     }
 
     public static int getNumberOfLines(String text, int videoWidth, int videoHeight, int fontSize) {
-        int widthWithoutPadding = videoWidth;// get 10% for padding
         int textLength = text.length();
-        return ((textLength * (fontSize / 2)) / widthWithoutPadding) + 1;
+        return ((textLength * (int)(fontSize / 1.5)) / videoWidth) + 1;
 
+    }
+
+    public static int getCharsPerLine(int videoWidth, int fontSize) {
+        return videoWidth / (int)(fontSize / 1.5);
     }
 }
