@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/black_gray</item>
-        <item name="colorAccent">@color/yellow</item>
+        <item name="colorAccent">@color/primaryYellow</item>
     </style>
 
     <!-- Base application theme. -->
@@ -12,7 +12,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/black_gray</item>
-        <item name="colorAccent">@color/yellow</item>
+        <item name="colorAccent">@color/primaryYellow</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -29,7 +29,7 @@
         <!-- Set these to match your theme -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/yellow</item>
+        <item name="colorAccent">@color/primaryYellow</item>
 
         <!-- Need to set this also to style create folder dialog -->
         <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
@@ -41,7 +41,7 @@
     <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/yellow</item>
+        <item name="colorAccent">@color/primaryYellow</item>
     </style>
 
     <style name="menu_labels_style">

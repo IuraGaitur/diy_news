@@ -67,6 +67,8 @@ public class VideoTimelineView extends View {
         mTrimImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.trimmer);
         int height = AndroidUtilities.dp(74);
         int width = (int)(height * 0.28);
+        if(width <= 0) width = 1;
+        if(height <= 0) height = 1;
         mTrimImage = Bitmap.createScaledBitmap(mTrimImage, width, height, true);
     }
 

@@ -119,7 +119,7 @@ public class PulsatorLayout extends RelativeLayout {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(4);
+        mPaint.setStrokeWidth(3);
         mPaint.setColor(mColor);
 
         // create views
@@ -325,7 +325,7 @@ public class PulsatorLayout extends RelativeLayout {
             scaleYAnimator.setStartDelay(delay);
             animators.add(scaleYAnimator);
 
-            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(pulseView, "Alpha", 1f, 0f);
+            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(pulseView, "Alpha", 1f, 1f);
             alphaAnimator.setRepeatCount(repeatCount);
             alphaAnimator.setRepeatMode(ObjectAnimator.RESTART);
             alphaAnimator.setStartDelay(delay);
@@ -390,7 +390,7 @@ public class PulsatorLayout extends RelativeLayout {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint);
+            canvas.drawCircle(mCenterX, mCenterY, mRadius - 5, mPaint);
         }
 
     }

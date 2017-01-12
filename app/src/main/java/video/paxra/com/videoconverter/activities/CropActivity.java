@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsLogger;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -32,6 +34,9 @@ public class CropActivity extends AppCompatActivity {
     @InjectView(R.id.text_from_sec) TextView mFromSecTextView;
     @InjectView(R.id.text_to_sec) TextView mToSecTextView;
     @InjectView(R.id.back_btn) ImageView mBackImageView;
+
+    AppEventsLogger logger;
+
     String path;
 
     public static final String TAG_START_POS = "start";
@@ -55,6 +60,7 @@ public class CropActivity extends AppCompatActivity {
         path = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
         ButterKnife.inject(this);
         loadTimeLine();
+        logger = AppEventsLogger.newLogger(this);
     }
 
 
@@ -104,6 +110,11 @@ public class CropActivity extends AppCompatActivity {
         mVideoTimelineView.setVideoPath(videoPath);
 
         mVideoDuration = mVideoTimelineView.getVideoLength();
+
+        if(!checkDurationEnough(mVideoDuration)) {
+            showErrorDurationNotEnough();
+        }
+
         mEndPos = (int)mVideoDuration;
         mToSecTextView.setText(TimeUtil.formatTime(mVideoDuration));
         mVideoWidth = mVideoTimelineView.getVideoWidth();
@@ -144,6 +155,8 @@ public class CropActivity extends AppCompatActivity {
     public void convert(View view) {
         mStartPos = (int) mStartPos / 1000;
         mEndPos = (int) mEndPos / 1000;
+        logger.logEvent("VIDEO_WIDTH:" + mVideoWidth + "; VIDEO_HEIGHT:" + mVideoHeight + ";VIDEO_DURATION:" + (mEndPos - mStartPos));
+        logger.logEvent("TRIM_VIDEO_SELECTED");
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(TAG_START_POS, mStartPos);
@@ -158,9 +171,29 @@ public class CropActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        if (mVideoView.backPress()) {
+            return;
+        }
+        super.onBackPressed();  // optional depending on your needs
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mVideoView.release();
         VideoPlayer.releaseAllVideos();
+    }
+
+    public boolean checkDurationEnough(long mVideoDuration) {
+        if(mVideoDuration / 1000 < 14)
+            return false;
+        return true;
+    }
+
+    public void showErrorDurationNotEnough() {
+        Toast.makeText(this, "Durata video-ului trebuie sa fie mai lunga de 15 sec", Toast.LENGTH_LONG).show();
+        finish();
     }
 }

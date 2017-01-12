@@ -20,8 +20,8 @@
 
         <video.paxra.com.videoconverter.views.PulsatorLayout
             android:id="@+id/pulsator2"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             app:pulse_color="@color/yellow"
@@ -34,8 +34,8 @@
 
             <ImageView
                 android:id="@+id/action_record"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/img_phone"
                 android:padding="28dp"
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Înregistrează Video"
+            android:text="@string/register"
             android:layout_below="@id/pulsator2"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
@@ -61,8 +61,8 @@
 
         <video.paxra.com.videoconverter.views.PulsatorLayout
             android:id="@+id/pulsator1"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             app:pulse_color="@color/yellow"
@@ -75,8 +75,8 @@
 
             <ImageView
                 android:id="@+id/action_import"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/img_video"
                 android:padding="30dp"
@@ -89,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Din Librărie"
+            android:text="@string/from_library"
             android:layout_below="@id/pulsator1"
             android:textColor="@android:color/white"
             android:textSize="20sp" />

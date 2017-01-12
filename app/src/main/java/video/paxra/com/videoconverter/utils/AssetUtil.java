@@ -58,4 +58,11 @@ public class AssetUtil {
             out.write(buffer, 0, read);
         }
     }
+
+    public static void removeTemporaryFile(String path) throws IOException {
+        File file = new File(path);
+        file.delete();
+    }
+
+
 }

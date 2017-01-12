@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        mVideoFragment.onBackPressed();
+        if(mVideoFragment.onBackPressed()) {
+            return;
+        }
         super.onBackPressed();
 
     }
@@ -73,16 +75,6 @@ public class MainActivity extends AppCompatActivity {
     public String getFilePath() {
         return filePath;
     }
-
-    /* public void setImportantQuestion(TextView view) {
-        String text = view.getText().toString() + " *";
-        Spannable wordtoSpan = new SpannableString(text);
-        int start = text.indexOf('*');
-        wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLACK), 0, start, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), start, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        view.setText(wordtoSpan);
-
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

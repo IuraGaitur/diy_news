@@ -14,7 +14,12 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.facebook.appevents.AppEventsLogger;
+
+import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -23,20 +28,28 @@ import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerSimple;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import video.paxra.com.videoconverter.R;
+import video.paxra.com.videoconverter.utils.AssetUtil;
 import video.paxra.com.videoconverter.views.VideoPlayer;
 
 public class ShareActivity extends AppCompatActivity {
 
     @Optional @InjectView(R.id.shareVideoView) JCVideoPlayerStandard mVideoView;
+    @Optional @InjectView(R.id.back_btn) ImageView mBackImageView;
+    AppEventsLogger logger;
     String fileOutPath = "";
+    private boolean mVideoWasSaved;
+    private long duration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
         fileOutPath = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
+        duration = getIntent().getLongExtra(CropActivity.TAG_START_POS, 0);
+
         ButterKnife.inject(this);
         setVideoUrl(fileOutPath);
+        logger = AppEventsLogger.newLogger(this);
     }
 
 
@@ -47,37 +60,42 @@ public class ShareActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.btn_exit)
+    @Optional @OnClick(R.id.btn_exit)
     public void exit(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        logger.logEvent("EXIT_APPLICATION");
+        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("Exit me", true);
+        intent.putExtra("EXIT", true);
         startActivity(intent);
-        finish();
     }
 
 
-    @OnClick(R.id.btn_share)
+    @Optional @OnClick(R.id.btn_share)
     public void share(View view) {
+        logger.logEvent("SHARE_VIDEO");
         shareVideo(this, fileOutPath);
     }
 
-    @OnClick(R.id.btn_save)
+    @Optional @OnClick(R.id.btn_save)
     public void saveVideo(View view) {
+        logger.logEvent("SAVE_VIDEO");
         showSaveDialog();
     }
 
 
     private void insertFileInMediaStore(String fileOutPath, String videoName) {
         Log.d("Title", fileOutPath);
+        fileOutPath =fileOutPath.replace("file://", "");
         Log.d("Data", fileOutPath);
         ContentResolver cr = this.getContentResolver();
         ContentValues values = new ContentValues();
         values.put(MediaStore.Video.Media.TITLE, videoName);
         values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
         values.put(MediaStore.Video.Media.DATA, fileOutPath);
-        cr.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-        Toast.makeText(this, "Salvare completa", Toast.LENGTH_SHORT);
+        values.put(MediaStore.Video.Media.DURATION, duration);
+        Uri uri = cr.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+        Toast.makeText(this, "Salvare completa", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -95,6 +113,7 @@ public class ShareActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String name = input.getText().toString();
+                mVideoWasSaved = true;
                 insertFileInMediaStore(fileOutPath, name);
             }
         });
@@ -119,10 +138,40 @@ public class ShareActivity extends AppCompatActivity {
 
     }
 
+    @Optional @OnClick(R.id.back_btn)
+    public void backBtnClick(View view) {
+        onBackPressed();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
         mVideoView.release();
         VideoPlayer.releaseAllVideos();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mVideoView.backPress()) {
+            return;
+        }
+        super.onBackPressed();  // optional depending on your needs
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(!mVideoWasSaved) {
+            removeTemporaryVideo(fileOutPath);
+        }
+    }
+
+    private void removeTemporaryVideo(String path) {
+        try {
+            AssetUtil.removeTemporaryFile(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

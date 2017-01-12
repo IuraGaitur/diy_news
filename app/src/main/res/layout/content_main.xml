@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Creeză știrea"
+            android:text="@string/create"
             android:textColor="@android:color/white"
             android:textSize="26sp"
             android:textStyle="bold" />

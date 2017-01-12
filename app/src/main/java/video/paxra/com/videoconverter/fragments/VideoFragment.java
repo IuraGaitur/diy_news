@@ -62,10 +62,8 @@ public class VideoFragment extends Fragment {
         return fragment;
     }
 
-    public void onBackPressed() {
-        if (JCVideoPlayer.backPress()) {
-            return;
-        }
+    public boolean onBackPressed() {
+        return mVideoView.backPress();
     }
 
     @Override
@@ -93,19 +91,21 @@ public class VideoFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         Log.d("Start and end", "" + mVideoStartPos + ":" + mVideoEndPos);
-        mVideoView.setUp(videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
         ((VideoPlayer)mVideoView).startCutVideoTime = mVideoStartPos * 1000;
         ((VideoPlayer)mVideoView).endCutVideoTime = mVideoEndPos * 1000;
         ((VideoPlayer)mVideoView).seekToInAdvance = mVideoStartPos * 1000;
-
+        mVideoView.setUp(videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("VideoFragment", "Pause and destroy");
         mVideoView.release();
         VideoPlayer.releaseAllVideos();
     }
+
+
 
     public void setVideoUri(String uri) {
         this.videoUrl = uri;
@@ -113,12 +113,6 @@ public class VideoFragment extends Fragment {
 
 
     public void setOnConfigurationChanged() {
-
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
 
     }
 

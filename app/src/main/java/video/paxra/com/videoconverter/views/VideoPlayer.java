@@ -113,14 +113,14 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
     public int currentState  = -1;
     public int currentScreen = -1;
 
-    public int startCutVideoTime;
-    public int endCutVideoTime;
+    public static int startCutVideoTime;
+    public static int endCutVideoTime;
 
     public String              url             = "";
     public Object[]            objects         = null;
     public boolean             looping         = false;
     public Map<String, String> mapHeadData     = new HashMap<>();
-    public int                 seekToInAdvance = -1;
+    public static int                 seekToInAdvance = -1;
 
     public ImageView startButton;
     public SeekBar   progressBar;
@@ -351,7 +351,7 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
                     dismissVolumeDialog();
                     if (mChangePosition) {
                         onEvent(JCBuriedPoint.ON_TOUCH_SCREEN_SEEK_POSITION);
-                        JCMediaManager.instance().mediaPlayer.seekTo(mSeekTimePosition);
+                        JCMediaManager.instance().mediaPlayer.seekTo(mSeekTimePosition - startCutVideoTime);
                         int duration = getDuration();
                         int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);
                         progressBar.setProgress(progress);
@@ -441,7 +441,7 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
         if (seekToInAdvance != -1) {
             Log.d("Seek in advance", "" + seekToInAdvance);
             JCMediaManager.instance().mediaPlayer.seekTo(seekToInAdvance);
-            seekToInAdvance = -1;
+            //seekToInAdvance = -1;
         }
         startProgressTimer();
         setUiWitStateAndScreen(CURRENT_STATE_PLAYING);
@@ -658,7 +658,7 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
         }
         if (currentState != CURRENT_STATE_PLAYING &&
                 currentState != CURRENT_STATE_PAUSE) return;
-        int time = seekBar.getProgress() * getDuration() / 100 + startCutVideoTime;
+        int time = (seekBar.getProgress() * getDuration() / 100) + startCutVideoTime;
         JCMediaManager.instance().mediaPlayer.seekTo(time);
         Log.i(TAG, "seekTo " + time + " [" + this.hashCode() + "] ");
     }
@@ -758,7 +758,7 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
                     }
                 });
                 Log.d("Completion", "Position:" + position + ":" + endCutVideoTime);
-                if(position >= endCutVideoTime) {
+                if(position >= (endCutVideoTime - startCutVideoTime)) {
                     JCMediaManager media = JCMediaManager.instance();
                     if (media.mediaPlayer.isPlaying()) {
                         Log.d("Player", "is playing");
@@ -792,6 +792,7 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
                 return position;
             }
         }
+        position = position - startCutVideoTime;
         return position;
     }
 
@@ -803,12 +804,14 @@ public abstract class VideoPlayer extends FrameLayout implements JCMediaPlayerLi
             e.printStackTrace();
             return duration;
         }
-        Log.d("Duration start", ":"+ startCutVideoTime);
-        return (duration - startCutVideoTime - (duration - endCutVideoTime ));
+        int time = (duration - startCutVideoTime - (duration - endCutVideoTime ));
+        Log.d("Duration start", ":"+ time);
+        return time;
     }
 
     public void setTextAndProgress(int secProgress) {
         int position = getCurrentPositionWhenPlaying();
+        Log.d("Position", position + "" + secProgress);
         int duration = getDuration();
         int progress = position * 100 / (duration == 0 ? 1 : duration);
         setProgressAndTime(progress, secProgress, position, duration);

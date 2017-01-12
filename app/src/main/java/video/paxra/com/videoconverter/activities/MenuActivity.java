@@ -5,8 +5,11 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.facebook.appevents.AppEventsLogger;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -21,6 +24,7 @@ public class MenuActivity extends AppCompatActivity {
     private static final int REQUEST_FILE_PICKER = 700;
     private String filePath = "";
     private String fileOutPath = "";
+    AppEventsLogger logger;
 
     public final static String TAG_FILE_URI = "uri";
 
@@ -33,9 +37,16 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
         ButterKnife.inject(this);
         pulsatorLayoutFirstView.start();
         pulsatorLayoutSecondView.start();
+        logger = AppEventsLogger.newLogger(this);
+
+
     }
 
 
@@ -43,6 +54,7 @@ public class MenuActivity extends AppCompatActivity {
     @OnClick(R.id.action_import)
     public void actionImportClick(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        logger.logEvent("IMPORT_VIDEO_SELECTED");
         startActivityForResult(intent, REQUEST_FILE_PICKER);
     }
 
@@ -50,6 +62,7 @@ public class MenuActivity extends AppCompatActivity {
     public void actionRecordClick(View view) {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            logger.logEvent("RECORD_VIDEO_SELECTED");
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
@@ -59,6 +72,11 @@ public class MenuActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 700) {
             Uri videoUri = data.getData();
             filePath = PathUtil.getRealPathFromURI(this, videoUri);
+            if(filePath == null) {
+                filePath = videoUri.getPath().toString();
+            }
+            Log.d("Uri file", filePath.toString());
+
             Intent intent = new Intent(MenuActivity.this, CropActivity.class);
             intent.putExtra(TAG_FILE_URI, filePath);
             startActivity(intent);

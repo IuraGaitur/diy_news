@@ -42,10 +42,6 @@ public class CommandsFFMpegUtilTest extends TestCase{
         //answers.add(new Answer(6, "Pot fi posibile incaierari dintre baieti", "text"));
 
         List<Answer> actualResult = FFMpegUtils.calculateTimeShowForText(answers, 35);
-        for (Answer answer: actualResult) {
-            Log.d("Answer", answer.toString());
-        }
-
         Assert.assertEquals("Text time are equals", expectedResult, actualResult);
     }
 
@@ -53,7 +49,7 @@ public class CommandsFFMpegUtilTest extends TestCase{
 
     @Test
     public void testNumberLinesReturnEqual() {
-        int expectedResult = 1;
+        int expectedResult = 2;
         String text = "O grupa de activisti din Republica Moldova";
         int actualResult = AndroidUtilities.getNumberOfLines(text, 480, 720, 20);
 
@@ -63,7 +59,7 @@ public class CommandsFFMpegUtilTest extends TestCase{
 
     @Test
     public void testXStartPositionReturnEqual() {
-        int expectedResult = 100;
+        int expectedResult = 35;
         String text = "Au declara ca nu sunt buni de nimic si de";
         int actualResult = AndroidUtilities.getXStartPosition(text, 480, 20);
 
@@ -73,7 +69,7 @@ public class CommandsFFMpegUtilTest extends TestCase{
 
     @Test
     public void testYStartPositionReturnEqual() {
-        int expectedResult = 100;
+        int expectedResult = 650;
         String text = "La monumentul de la gara de nord s-a intimplat o catastrofa de tip mare de aceea socot ca nu e nevoie de facut";
         int actualResult = AndroidUtilities.getYStartPosition(720, 2, 3, 20, 10);
 
@@ -83,10 +79,11 @@ public class CommandsFFMpegUtilTest extends TestCase{
 
     @Test
     public void testCutStringReturnEqual() {
-        int expectedResult = 100;
-        String text = "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa";
-        List<String> actualResult = StringUtils.splitStringIntoParts(text, 2);
-
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add("Au declarat ca nu sunt buni de nimic si de aceea ");
+        expectedResult.add("o sa lese postul si o sa plece acasa ");
+        String text = "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa ";
+        List<String> actualResult = StringUtils.splitStringIntoParts(text, 50);
 
         Assert.assertEquals("Y Positions are equals", expectedResult, actualResult);
     }

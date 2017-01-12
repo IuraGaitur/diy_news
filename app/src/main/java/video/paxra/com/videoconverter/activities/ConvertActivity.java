@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
@@ -60,6 +61,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     private int mVideoHeight = 0;
 
     private static final int MY_PERMISSIONS_REQUEST_WRITE_FILES = 800;
+    AppEventsLogger logger;
 
     private Handler mConvertHandler;
     private Runnable mConvertRunnable = new Runnable() {
@@ -82,6 +84,9 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         mEndVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_END_POS, 0);
         mVideoWidth = getIntent().getExtras().getInt(CropActivity.TAG_WIDTH, 0);
         mVideoHeight = getIntent().getExtras().getInt(CropActivity.TAG_HEIGHT, 0);
+        logger = AppEventsLogger.newLogger(this);
+        logger.logEvent("CONVERT_VIDEO_STARTED");
+
     }
 
     private void initializeConvertion() {
@@ -120,15 +125,17 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
 
     public void gotoFinishLayer() {
+        logger.logEvent("CONVERT_VIDEO_ENDED");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent(ConvertActivity.this, ShareActivity.class);
                 intent.putExtra(MenuActivity.TAG_FILE_URI, outputFileName);
+                intent.putExtra(CropActivity.TAG_START_POS, (long)((mEndVideoPos - mStartVideoPos) * 1000));
                 startActivity(intent);
                 finish();
             }
-        }, 2000);
+        }, 1000);
     }
 
 
@@ -209,7 +216,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
     public void initializeConvertingVideo(Context context, ArrayList<Answer> answers, String fileName) {
         String image = getExternalFilesDir(null) + "/icon_trans.png";;
-        String fontFile = this.getExternalFilesDir(null) + "/AvenirNext-Regular.ttf";
+        String fontFile = this.getExternalFilesDir(null) + "/AvenirNext-DemiBold.ttf";
         // Generate random file name for video
         outputFileName = fileName.split("\\.")[fileName.split("\\.").length - 1 ];
         String pattern = "MM_dd_yyyy";
