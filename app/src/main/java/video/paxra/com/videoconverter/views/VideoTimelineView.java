@@ -186,9 +186,11 @@ public class VideoTimelineView extends View {
         }
         if (frameNum == 0) {
             frameHeight = AndroidUtilities.dp(70);
-            framesToLoad = (getMeasuredWidth() - AndroidUtilities.dp(16)) / frameHeight;
-            frameWidth = (int)Math.ceil((float)(getMeasuredWidth() - AndroidUtilities.dp(16)) / (float)framesToLoad);
-            frameTimeOffset = videoLength / framesToLoad;
+            if(frameHeight > 0) {
+                framesToLoad = (getMeasuredWidth() - AndroidUtilities.dp(16)) / frameHeight;
+                frameWidth = (int) Math.ceil((float) (getMeasuredWidth() - AndroidUtilities.dp(16)) / (float) framesToLoad);
+                frameTimeOffset = videoLength / framesToLoad;
+            }
         }
         currentTask = new AsyncTask<Integer, Integer, Bitmap>() {
             private int frameNum = 0;

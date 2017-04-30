@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ import butterknife.OnClick;
 import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerSimple;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.utils.AssetUtil;
 import video.paxra.com.videoconverter.views.VideoPlayer;
@@ -46,9 +49,10 @@ public class ShareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_share);
         fileOutPath = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
         duration = getIntent().getLongExtra(CropActivity.TAG_START_POS, 0);
-
+        Fabric.with(this, new Crashlytics());
         ButterKnife.inject(this);
         setVideoUrl(fileOutPath);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         logger = AppEventsLogger.newLogger(this);
     }
 

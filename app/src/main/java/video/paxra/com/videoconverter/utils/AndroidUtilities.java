@@ -57,7 +57,8 @@ public class AndroidUtilities {
             }
             Log.e("tmessages", "display size = " + displaySize.x + " " + displaySize.y + " " + displayMetrics.xdpi + "x" + displayMetrics.ydpi);
         } catch (Exception e) {
-            Log.e("tmessages", e.getMessage());
+            String err = (e.getMessage()==null)?"SD Card failed":e.getMessage();
+            Log.e("sdcard-err2:",err);
         }
     }
 

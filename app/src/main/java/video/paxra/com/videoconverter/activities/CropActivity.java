@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
 
 import butterknife.ButterKnife;
@@ -20,6 +21,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.utils.TimeUtil;
 import video.paxra.com.videoconverter.views.VideoPlayer;
@@ -60,6 +62,7 @@ public class CropActivity extends AppCompatActivity {
         path = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
         ButterKnife.inject(this);
         loadTimeLine();
+        Fabric.with(this, new Crashlytics());
         logger = AppEventsLogger.newLogger(this);
     }
 

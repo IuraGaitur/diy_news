@@ -9,10 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
+import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.fragments.VideoFragment;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         extractBundleData();
+        Fabric.with(this, new Crashlytics());
         mVideoFragment = VideoFragment.newInstance(fileUri, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
         getFragmentManager().beginTransaction().add(R.id.videoFragment, mVideoFragment).commit();
         mQuestionFragment = QuestionsFragment.newInstance(fileUri, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);

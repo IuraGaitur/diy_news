@@ -1,4 +1,5 @@
 package video.paxra.com.videoconverter.views;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -23,7 +24,6 @@ import video.paxra.com.videoconverter.R;
 
 /**
  * Created by booncol on 04.07.2016.
- *
  */
 public class PulsatorLayout extends RelativeLayout {
 
@@ -71,7 +71,7 @@ public class PulsatorLayout extends RelativeLayout {
      *
      * @param context The Context the view is running in, through which it can access the current
      *                theme, resources, etc.
-     * @param attrs The attributes of the XML tag that is inflating the view.
+     * @param attrs   The attributes of the XML tag that is inflating the view.
      */
     public PulsatorLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -80,9 +80,9 @@ public class PulsatorLayout extends RelativeLayout {
     /**
      * Perform inflation from XML and apply a class-specific base style from a theme attribute.
      *
-     * @param context The Context the view is running in, through which it can access the current
-     *                theme, resources, etc.
-     * @param attrs The attributes of the XML tag that is inflating the view.
+     * @param context      The Context the view is running in, through which it can access the current
+     *                     theme, resources, etc.
+     * @param attrs        The attributes of the XML tag that is inflating the view.
      * @param defStyleAttr An attribute in the current theme that contains a reference to a style
      *                     resource that supplies default values for the view. Can be 0 to not look
      *                     for defaults.
@@ -129,7 +129,7 @@ public class PulsatorLayout extends RelativeLayout {
     /**
      * Start pulse animation.
      */
-    public synchronized void start() {
+    public void start() {
         if (mAnimatorSet == null || mIsStarted) {
             return;
         }
@@ -151,7 +151,7 @@ public class PulsatorLayout extends RelativeLayout {
     /**
      * Stop pulse animation.
      */
-    public synchronized void stop() {
+    public void stop() {
         if (mAnimatorSet == null || !mIsStarted) {
             return;
         }
@@ -159,7 +159,7 @@ public class PulsatorLayout extends RelativeLayout {
         mAnimatorSet.end();
     }
 
-    public synchronized boolean isStarted() {
+    public boolean isStarted() {
         return (mAnimatorSet != null && mIsStarted);
     }
 
@@ -218,6 +218,7 @@ public class PulsatorLayout extends RelativeLayout {
     /**
      * Gets the current color of the pulse effect in integer
      * Defaults to Color.rgb(0, 116, 193);
+     *
      * @return an integer representation of color
      */
     public int getColor() {
@@ -228,6 +229,7 @@ public class PulsatorLayout extends RelativeLayout {
      * Sets the current color of the pulse effect in integer
      * Takes effect immediately
      * Usage: Color.parseColor("<hex-value>") or getResources().getColor(R.color.colorAccent)
+     *
      * @param color : an integer representation of color
      */
     public void setColor(int color) {

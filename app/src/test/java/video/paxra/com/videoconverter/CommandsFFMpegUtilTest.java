@@ -1,8 +1,5 @@
 package video.paxra.com.videoconverter;
 
-import android.test.AndroidTestCase;
-import android.util.Log;
-
 import junit.framework.TestCase;
 
 import org.junit.Assert;
@@ -11,10 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 import video.paxra.com.videoconverter.models.Answer;
-import video.paxra.com.videoconverter.utils.CommandsFFMpegUtil;
 import video.paxra.com.videoconverter.utils.AndroidUtilities;
 import video.paxra.com.videoconverter.utils.FFMpegUtils;
 import video.paxra.com.videoconverter.utils.StringUtils;
@@ -22,7 +16,7 @@ import video.paxra.com.videoconverter.utils.StringUtils;
 /**
  * Created by iura on 7/3/16.
  */
-public class CommandsFFMpegUtilTest extends TestCase{
+public class CommandsFFMpegUtilTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
@@ -44,7 +38,6 @@ public class CommandsFFMpegUtilTest extends TestCase{
         List<Answer> actualResult = FFMpegUtils.calculateTimeShowForText(answers, 35);
         Assert.assertEquals("Text time are equals", expectedResult, actualResult);
     }
-
 
 
     @Test
@@ -69,12 +62,16 @@ public class CommandsFFMpegUtilTest extends TestCase{
 
     @Test
     public void testYStartPositionReturnEqual() {
-        int expectedResult = 650;
-        String text = "La monumentul de la gara de nord s-a intimplat o catastrofa de tip mare de aceea socot ca nu e nevoie de facut";
-        int actualResult = AndroidUtilities.getYStartPosition(720, 2, 3, 20, 10);
+        int[] expectedResult = {548, 584, 620, 656};
+        String text = "Protestatarii scandează La Pușcarie hotii jos penalii. Kz dms ăsdadsaîățșdas dsașăîădsa îădsațș sadîădas îădsa".toUpperCase();
+        int[] actualResult = new int[4];
+        actualResult[0] = AndroidUtilities.getYStartPosition(720, 1, 4, 30, 20);
+        actualResult[1] = AndroidUtilities.getYStartPosition(720, 2, 4, 30, 20);
+        actualResult[2] = AndroidUtilities.getYStartPosition(720, 3, 4, 30, 20);
+        actualResult[3] = AndroidUtilities.getYStartPosition(720, 4, 4, 30, 20);
+        //actualResult[3] =AndroidUtilities.getYStartPosition(720, 4, 4, 20, 10);
 
-
-        Assert.assertEquals("Y Positions are equals", expectedResult, actualResult);
+        Assert.assertArrayEquals("Y Positions are equals", expectedResult, actualResult);
     }
 
     @Test
@@ -101,7 +98,6 @@ public class CommandsFFMpegUtilTest extends TestCase{
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-
 
 
 }

@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.utils.PathUtil;
 import video.paxra.com.videoconverter.views.PulsatorLayout;
@@ -37,6 +39,7 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        Fabric.with(this, new Crashlytics());
 
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
@@ -45,8 +48,6 @@ public class MenuActivity extends AppCompatActivity {
         pulsatorLayoutFirstView.start();
         pulsatorLayoutSecondView.start();
         logger = AppEventsLogger.newLogger(this);
-
-
     }
 
 

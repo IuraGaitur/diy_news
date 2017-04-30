@@ -1,33 +1,34 @@
 <resources>
     <string name="app_name">DIY News</string>
-    <string name="action_settings">Share video</string>
-    <string name="device_not_supported">Device not supported</string>
-    <string name="device_not_supported_message">FFmpeg is not supported on your device</string>
-    <string name="question_1">Când?</string>
+    <string name="action_settings">Отправить видео</string>
+    <string name="device_not_supported">Устройство не поддерживается</string>
+    <string name="device_not_supported_message">FFmpeg не поддерживается на вашем устройстве</string>
+    <string name="question_1">Когда?</string>
     <string name="tip_1">10:45, 10.06.2016</string>
-    <string name="question_2">Unde?</string>
-    <string name="tip_2">Locația ...</string>
-    <string name="question_3">Cine participă la acțiune? Ce s-a întâmplat?</string>
-    <string name="tip_3">Evenimentul ...</string>
-    <string name="question_4">De ce?</string>
-    <string name="tip_4">Cauza ...</string>
-    <string name="question_5">Declarație martor sau persoană implicată</string>
-    <string name="tip_5">Informatie adaugatoare</string>
-    <string name="question_6">Detalii semnificative</string>
-    <string name="tip_6">Semnificativ</string>
+    <string name="question_2">Где?</string>
+    <string name="tip_2">Место ...</string>
+    <string name="question_3">Кто участвует в действии? Что случилось?</string>
+    <string name="tip_3">Событие ...</string>
+    <string name="question_4">Почему?</string>
+    <string name="tip_4">Причина ...</string>
+    <string name="question_5">Заявление свидетеля или заинтересованное лицо</string>
+    <string name="tip_5">Дополнительная информация</string>
+    <string name="question_6">Существенные детали</string>
+    <string name="tip_6">Значительное</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="generated">Video generat cu succes</string>
+    <string name="generated">Видео успешно создан</string>
 
     <string name="facebook_app_id">1081344738613033</string>
-    <string name="register">Înregistrează Video</string>
-    <string name="from_library">Din Librărie</string>
-    <string name="create_video">Creează Video</string>
-    <string name="answer_text">Răspunde la Intrebări</string>
-    <string name="create">Creeză știrea</string>
-    <string name="share_text">Împarte</string>
-    <string name="save_text">Salvează</string>
-    <string name="exit_text">Ieșire</string>
-    <string name="share_header_text">Distribuie Știrea</string>
+    <string name="register">Записать видео</string>
+    <string name="from_library">Импортировать</string>
+    <string name="create_video">Создай видео</string>
+    <string name="answer_text">Ответить на вопросы</string>
+    <string name="create">Создать новость</string>
+    <string name="share_text">Share</string>
+    <string name="save_text">Сохранить</string>
+    <string name="exit_text">Выход</string>
+    <string name="share_header_text">Поделиться новостью</string>
+    <string name="must_not_empty">Нужно заполнить</string>
 </resources>

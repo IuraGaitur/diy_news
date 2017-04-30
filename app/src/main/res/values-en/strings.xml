@@ -3,31 +3,32 @@
     <string name="action_settings">Share video</string>
     <string name="device_not_supported">Device not supported</string>
     <string name="device_not_supported_message">FFmpeg is not supported on your device</string>
-    <string name="question_1">Când?</string>
+    <string name="question_1">When?</string>
     <string name="tip_1">10:45, 10.06.2016</string>
-    <string name="question_2">Unde?</string>
-    <string name="tip_2">Locația ...</string>
-    <string name="question_3">Cine participă la acțiune? Ce s-a întâmplat?</string>
-    <string name="tip_3">Evenimentul ...</string>
-    <string name="question_4">De ce?</string>
-    <string name="tip_4">Cauza ...</string>
-    <string name="question_5">Declarație martor sau persoană implicată</string>
-    <string name="tip_5">Informatie adaugatoare</string>
-    <string name="question_6">Detalii semnificative</string>
-    <string name="tip_6">Semnificativ</string>
+    <string name="question_2">Where?</string>
+    <string name="tip_2">Location ...</string>
+    <string name="question_3">Who participates? What happened?</string>
+    <string name="tip_3">Event ...</string>
+    <string name="question_4">Why?</string>
+    <string name="tip_4">Cause ...</string>
+    <string name="question_5">Witness statement or person involved</string>
+    <string name="tip_5">Additional information</string>
+    <string name="question_6">Significant details</string>
+    <string name="tip_6">Significant</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="generated">Video generat cu succes</string>
+    <string name="generated">Video generated with success</string>
 
     <string name="facebook_app_id">1081344738613033</string>
-    <string name="register">Înregistrează Video</string>
-    <string name="from_library">Din Librărie</string>
-    <string name="create_video">Creează Video</string>
-    <string name="answer_text">Răspunde la Intrebări</string>
-    <string name="create">Creeză știrea</string>
-    <string name="share_text">Împarte</string>
-    <string name="save_text">Salvează</string>
-    <string name="exit_text">Ieșire</string>
-    <string name="share_header_text">Distribuie Știrea</string>
+    <string name="register">Register Video</string>
+    <string name="from_library">From Library</string>
+    <string name="create_video">Create Video</string>
+    <string name="answer_text">Answer Questions</string>
+    <string name="create">Create News</string>
+    <string name="share_text">Share</string>
+    <string name="save_text">Save</string>
+    <string name="exit_text">Exit</string>
+    <string name="share_header_text">Share News</string>
+    <string name="must_not_empty">Must be not empty</string>
 </resources>

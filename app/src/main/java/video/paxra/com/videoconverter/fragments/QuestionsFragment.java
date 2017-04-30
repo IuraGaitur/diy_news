@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -68,6 +70,8 @@ public class QuestionsFragment extends Fragment {
     Button mGenerateBtnView;
     @InjectView(R.id.main_parent)
     LinearLayout mLlvMainLView;
+    String mErrorMustComplete;
+
 
     public final static String TAG_ANSWERS = "answers";
     public static final String TAG_FILE = "file";
@@ -82,6 +86,7 @@ public class QuestionsFragment extends Fragment {
     private View view;
     private String mDateValue = "";
     private Calendar mVideoDate = Calendar.getInstance();
+
     AppEventsLogger logger;
 
     public QuestionsFragment() {
@@ -113,6 +118,7 @@ public class QuestionsFragment extends Fragment {
         this.mVideoEndPos = getArguments().getInt(CropActivity.TAG_END_POS);
         logger = AppEventsLogger.newLogger(getActivity());
         Log.d("File", videoUrl);
+        mErrorMustComplete = getString(R.string.must_not_empty);
     }
 
 
@@ -154,7 +160,7 @@ public class QuestionsFragment extends Fragment {
     public void initDateEdit() {
         Calendar calendar = Calendar.getInstance();
         String value = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ", "
-                + calendar.get(Calendar.DAY_OF_MONTH) + "." + calendar.get(Calendar.MONTH)
+                + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1)
                 + "." + calendar.get(Calendar.YEAR);
         Log.d("Date", value);
         mAnswer1EditView.setText(value);
@@ -197,17 +203,17 @@ public class QuestionsFragment extends Fragment {
 
     private boolean validateInputs() {
 
-        if (mAnswer1EditView.getText().toString().length() < 5) {
+        if (mAnswer1EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer1EditView);
             mAnswer1EditView.requestFocus();
             return false;
         }
-        if (mAnswer2EditView.getText().toString().length() < 5) {
+        if (mAnswer2EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer2EditView);
             mAnswer2EditView.requestFocus();
             return false;
         }
-        if (mAnswer3EditView.getText().toString().length() < 5) {
+        if (mAnswer3EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer3EditView);
             mAnswer3EditView.requestFocus();
             return false;
@@ -226,15 +232,15 @@ public class QuestionsFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    if (mAnswer1EditView.getText().toString().trim().length() < 5) {
-                        mAnswer1EditView.setError("Nu depășește 5 caractere");
+                    if (mAnswer1EditView.getText().toString().trim().length() < 2) {
+                        mAnswer1EditView.setError(mErrorMustComplete);
                     } else {
                         // your code here
                         mAnswer2EditView.setError(null);
                     }
                 } else {
-                    if (mAnswer2EditView.getText().toString().trim().length() < 5) {
-                        mAnswer2EditView.setError("Nu depășește 5 caractere");
+                    if (mAnswer2EditView.getText().toString().trim().length() < 2) {
+                        mAnswer2EditView.setError(mErrorMustComplete);
                     } else {
                         // your code here
                         mAnswer2EditView.setError(null);
@@ -247,15 +253,15 @@ public class QuestionsFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    if (mAnswer3EditView.getText().toString().trim().length() < 5) {
-                        mAnswer3EditView.setError("Nu depășește 5 caractere");
+                    if (mAnswer3EditView.getText().toString().trim().length() < 2) {
+                        mAnswer3EditView.setError(getString(R.string.must_not_empty));
                     } else {
                         // your code here
                         mAnswer3EditView.setError(null);
                     }
                 } else {
-                    if (mAnswer3EditView.getText().toString().trim().length() < 5) {
-                        mAnswer3EditView.setError("Nu depășește 5 caractere");
+                    if (mAnswer3EditView.getText().toString().trim().length() < 2) {
+                        mAnswer3EditView.setError(mErrorMustComplete);
                     } else {
                         // your code here
                         mAnswer3EditView.setError(null);

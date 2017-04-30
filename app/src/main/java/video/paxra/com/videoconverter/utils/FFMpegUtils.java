@@ -48,7 +48,6 @@ public class FFMpegUtils {
 
                 @Override
                 public void onProgress(String message) {
-                    Log.d("Progress", message);
                     resolver.onProgressConvert(message);
                 }
 

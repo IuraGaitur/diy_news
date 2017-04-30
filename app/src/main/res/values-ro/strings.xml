@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">DIY News</string>
-    <string name="action_settings">Share video</string>
-    <string name="device_not_supported">Device not supported</string>
-    <string name="device_not_supported_message">FFmpeg is not supported on your device</string>
+    <string name="action_settings">Distribuie video</string>
+    <string name="device_not_supported">Device nu e suportat</string>
+    <string name="device_not_supported_message">FFmpeg nu e suportat de device</string>
     <string name="question_1">Când?</string>
     <string name="tip_1">10:45, 10.06.2016</string>
     <string name="question_2">Unde?</string>
@@ -17,17 +17,18 @@
     <string name="tip_6">Semnificativ</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Salut</string>
     <string name="generated">Video generat cu succes</string>
 
     <string name="facebook_app_id">1081344738613033</string>
     <string name="register">Înregistrează Video</string>
     <string name="from_library">Din Librărie</string>
     <string name="create_video">Creează Video</string>
-    <string name="answer_text">Răspunde la Intrebări</string>
+    <string name="answer_text">Răspunde la Întrebări</string>
     <string name="create">Creeză știrea</string>
-    <string name="share_text">Împarte</string>
+    <string name="share_text">Distribuie</string>
     <string name="save_text">Salvează</string>
     <string name="exit_text">Ieșire</string>
     <string name="share_header_text">Distribuie Știrea</string>
+    <string name="must_not_empty">Trebuie completat</string>
 </resources>

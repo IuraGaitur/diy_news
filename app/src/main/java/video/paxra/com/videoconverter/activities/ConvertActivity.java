@@ -16,9 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler;
@@ -39,6 +41,7 @@ import java.util.regex.Pattern;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.models.Answer;
@@ -78,12 +81,14 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         setContentView(R.layout.activity_converter);
         ButterKnife.inject(this);
         initializeConvertion();
+        Fabric.with(this, new Crashlytics());
         answers = (ArrayList<Answer>) getIntent().getSerializableExtra(QuestionsFragment.TAG_ANSWERS);
         fileName = getIntent().getStringExtra(QuestionsFragment.TAG_FILE);
         mStartVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_START_POS, 0);
         mEndVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_END_POS, 0);
         mVideoWidth = getIntent().getExtras().getInt(CropActivity.TAG_WIDTH, 0);
         mVideoHeight = getIntent().getExtras().getInt(CropActivity.TAG_HEIGHT, 0);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         logger = AppEventsLogger.newLogger(this);
         logger.logEvent("CONVERT_VIDEO_STARTED");
 
@@ -153,14 +158,14 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
             double frames = Double.parseDouble(matcher.group(1).trim());
             double percentage = (frames / mTotalFPS) * 100;
             mPgbView.setProgress((int)percentage);
-            Log.d("Message", "Percents:" + percentage);
 
         }
-        Log.d("Message", message);
     }
 
     @Override
     public void onFailureConvert(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG);
+        logger.logEvent("Error:" + message);
         Log.d("Failure", message);
     }
 
@@ -179,6 +184,12 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     public void cancelConverting(View view) {
         super.onBackPressed();
         mConvertHandler.removeCallbacks(mConvertRunnable);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -216,7 +227,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
     public void initializeConvertingVideo(Context context, ArrayList<Answer> answers, String fileName) {
         String image = getExternalFilesDir(null) + "/icon_trans.png";;
-        String fontFile = this.getExternalFilesDir(null) + "/AvenirNext-DemiBold.ttf";
+        String fontFile = this.getExternalFilesDir(null) + "/font.ttf";
         // Generate random file name for video
         outputFileName = fileName.split("\\.")[fileName.split("\\.").length - 1 ];
         String pattern = "MM_dd_yyyy";
@@ -305,6 +316,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
             }
         }
     }
+
     private void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;

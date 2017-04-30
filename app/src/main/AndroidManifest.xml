@@ -63,6 +63,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeBar" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="1081344738613033" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="fcee939e1fecdf2d7f258e279c0e889796c19c6f" />
     </application>
 
 

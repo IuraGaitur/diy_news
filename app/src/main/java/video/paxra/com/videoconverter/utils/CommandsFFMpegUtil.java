@@ -12,7 +12,7 @@ import video.paxra.com.videoconverter.models.Answer;
  */
 public class CommandsFFMpegUtil {
     public static String[] buildCommand(String inputFile, String outputFile, ArrayList<Answer> answers, String fontFile, String imagePath, int screenWidth, int screenHeight, int cropFrom, int cropTo) {
-        int paddingBottom = 20;
+        int paddingBottom = 26;
         int fontSize = (960 + 540) / 50;
         int videoDuration = cropTo - cropFrom;
         List<String> data = new ArrayList();
@@ -53,15 +53,21 @@ public class CommandsFFMpegUtil {
                 int charsPerLine = AndroidUtilities.getCharsPerLine(finalWidth, fontSize);
                 List<String> cutAnswer = StringUtils.splitStringIntoParts(answers.get(i).answer, charsPerLine);
                 for (int j = 0; j < cutAnswer.size(); j++) {
-                    yPos = AndroidUtilities.getYStartPosition(finalHeight, j, lineNumber, fontSize, paddingBottom);
+                    yPos = AndroidUtilities.getYStartPosition(finalHeight, j+1, lineNumber, fontSize, paddingBottom);
+
+                    Log.d("Y Pos", "Y pos" + yPos);
 
                     if (cutAnswer.size() == 1) {
                         item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
                                         ": fontcolor=yellow:shadowcolor=black:shadowx=1:shadowy=1: fontsize=" + (960+540)/50 + ": x=(w-tw)/2: y=" + yPos,
                                 answers.get(i).getFrom(), answers.get(i).getTo(), fontFile, cutAnswer.get(j).replace(":", "\\:").replace("'", "'\\\\\\''"));
                     } else {
+                        int negativePadding = 0;
+                        if(cutAnswer.get(j).contains("Ș") || cutAnswer.get(j).contains("Ț") || cutAnswer.get(j).contains("Ă") || cutAnswer.get(j).contains("Î")) {
+                            negativePadding = 7;
+                        }
                         item = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                                        ": fontcolor=yellow:shadowcolor=black:shadowx=1:shadowy=1: fontsize=" + (960+540)/50 + ": x=(w / 20): y=" + yPos,
+                                        ": fontcolor=yellow:shadowcolor=black:shadowx=1:shadowy=1: fontsize=" + 32 + ": x=(w / 20): y=(h - (h / 10) - (40*" + (cutAnswer.size() - (j + 1)) + ") - " + negativePadding + ")" ,
                                 answers.get(i).getFrom(), answers.get(i).getTo(), fontFile, cutAnswer.get(j).replace(":", "\\:").replace("'", "'\\\\\\''"));
                     }
                     if (j < cutAnswer.size() - 1) {
