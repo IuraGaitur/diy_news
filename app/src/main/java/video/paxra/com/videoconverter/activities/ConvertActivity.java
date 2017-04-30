@@ -227,7 +227,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
     public void initializeConvertingVideo(Context context, ArrayList<Answer> answers, String fileName) {
         String image = getExternalFilesDir(null) + "/icon_trans.png";;
-        String fontFile = this.getExternalFilesDir(null) + "/font.ttf";
+        String fontFile = this.getExternalFilesDir(null) + "/AvenirNext-DemiBold.ttf";
         // Generate random file name for video
         outputFileName = fileName.split("\\.")[fileName.split("\\.").length - 1 ];
         String pattern = "MM_dd_yyyy";
