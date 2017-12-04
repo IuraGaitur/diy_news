@@ -31,4 +31,8 @@
     <string name="exit_text">Exit</string>
     <string name="share_header_text">Share News</string>
     <string name="must_not_empty">Must be not empty</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="check_upload">I agree with uploading video on DIY_News channel on youtube</string>
+    <string name="not_enough_length">The video length should be more than 15 seconds</string>
 </resources>

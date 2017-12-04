@@ -68,19 +68,8 @@ public class CropActivity extends AppCompatActivity {
 
 
     private void loadTimeLine() {
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            Log.d("Permissions", "" + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE));
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_FILES);
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_FILES);
         }else {
             loadVideo(path);
             loadTimelineView(path);
@@ -88,8 +77,7 @@ public class CropActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_FILES: {
                 // If request is cancelled, the result arrays are empty.
@@ -97,6 +85,7 @@ public class CropActivity extends AppCompatActivity {
                     loadVideo(path);
                     loadTimelineView(path);
                 } else {
+                    disableNextButton();
                     Toast.makeText(this, "Unable to start playing without proper permission", Toast.LENGTH_SHORT);
                 }
                 return;
@@ -108,6 +97,11 @@ public class CropActivity extends AppCompatActivity {
         mVideoView.setUp("file://" + videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
     }
 
+    private void disableNextButton() {
+        mNextImageView.setEnabled(false);
+        mNextTextView.setEnabled(false);
+    }
+
 
     private void loadTimelineView(String videoPath) {
         mVideoTimelineView.setVideoPath(videoPath);
@@ -116,6 +110,7 @@ public class CropActivity extends AppCompatActivity {
 
         if(!checkDurationEnough(mVideoDuration)) {
             showErrorDurationNotEnough();
+            return;
         }
 
         mEndPos = (int)mVideoDuration;
@@ -190,13 +185,11 @@ public class CropActivity extends AppCompatActivity {
     }
 
     public boolean checkDurationEnough(long mVideoDuration) {
-        if(mVideoDuration / 1000 < 14)
-            return false;
-        return true;
+        return (mVideoDuration / 1000) >= 15 ;
     }
 
     public void showErrorDurationNotEnough() {
-        Toast.makeText(this, "Durata video-ului trebuie sa fie mai lunga de 15 sec", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.not_enough_length), Toast.LENGTH_LONG).show();
         finish();
     }
 }

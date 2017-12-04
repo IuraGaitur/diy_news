@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction().add(R.id.videoFragment, mVideoFragment).commit();
         mQuestionFragment = QuestionsFragment.newInstance(fileUri, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
         getFragmentManager().beginTransaction().add(R.id.questionFragment, mQuestionFragment).commit();
-        /*ObjectGraph.create(new DaggerDependencyModule(this)).inject(this);*/
-
     }
 
     public void extractBundleData() {
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_TRIM) {
-            //mQuestionFragment;
             int[] result = data.getIntArrayExtra("data");
             Log.d("Result", result.toString());
         }

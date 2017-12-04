@@ -8,10 +8,11 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+//apply plugin: 'saantiaguilera.securekeys'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
     testOptions {
         unitTests.returnDefaultValues = true
@@ -22,11 +23,16 @@ android {
         applicationId "video.paxra.com.videoconverter"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 6
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -42,26 +48,28 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     apt 'com.google.dagger:dagger-compiler:2.7'
     compile 'com.google.dagger:dagger:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:1.9.5"
-
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.4.0'
     compile 'com.writingminds:FFmpegAndroid:0.3.2'
     compile 'com.nononsenseapps:filepicker:2.5.3'
-
     compile 'com.jakewharton:butterknife:5.1.2'
     compile 'com.leo.simplearcloader:simplearcloader:1.0.+'
-    compile 'com.android.support:support-v4:23.4.0'
-
+    compile 'com.android.support:support-v4:22.2.1'
     compile 'fm.jiecao:jiecaovideoplayer:4.7.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
-
+    compile 'com.library.tangxiaolv:telegramgallery:1.0.5'
+    compile 'com.droidninja:filepicker:2.1.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    //compile "com.saantiaguilera.securekeys:core:2.0.0"
+    //annotationProcessor "com.saantiaguilera.securekeys:processor:2.0.0"
 }

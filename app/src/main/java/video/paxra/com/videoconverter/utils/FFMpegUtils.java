@@ -33,7 +33,7 @@ public class FFMpegUtils {
         String inputName = filePath;
         String outputName = fileOutPath = PathUtil.getPathFromFile(filePath) + TimeUtil.getTime()+".mp4";
         String imageName = PathUtil.getPathFromFile(filePath) + "ic_app.png";
-        String[] cmds = CommandsFFMpegUtil.buildCommand(inputName, outputName, texts, font);*/
+        String[] cmds = FfmpegCommandBuilder.buildCommand(inputName, outputName, texts, font);*/
 
         Log.d("Convert", "Convert video");
         Log.d("Commands", text.length + "");
@@ -108,16 +108,18 @@ public class FFMpegUtils {
                     }
                     Log.d("Time", time);
                     SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.SS");
+                    double totalFPS = 0;
                     try {
                         calendar.setTime(format.parse(time));
+                        double seconds = (calendar.get(Calendar.HOUR_OF_DAY) * 60 * 60 +
+                                calendar.get(Calendar.MINUTE) * 60 +
+                                calendar.get(Calendar.SECOND) +
+                                calendar.get(Calendar.MILLISECOND) / 1000);
+                        totalFPS = seconds * Double.parseDouble(fps);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    double seconds = (calendar.get(Calendar.HOUR_OF_DAY) * 60 * 60 +
-                            calendar.get(Calendar.MINUTE) * 60 +
-                            calendar.get(Calendar.SECOND) +
-                            calendar.get(Calendar.MILLISECOND) / 1000);
-                    double totalFPS = seconds * Double.parseDouble(fps);
+
                     Log.d("Total FPS", totalFPS + "");
                     resolver.onFailureConvert("Total FPS:" + totalFPS);
                 }
@@ -150,39 +152,72 @@ public class FFMpegUtils {
         return "00:00:00";
     }
 
+    /**
+     * Calculate time for each text with each is distributed equally
+     * between them
+     * @param answers - list texts
+     * @param videoLenght - total video size
+     * @return
+     */
     public static ArrayList<Answer> calculateTimeShowForText(ArrayList<Answer> answers, int videoLenght) {
-        int listSize = answers.size() - 2;
-        int padding = 2;
-        //parts represent a text showing and a time between
-        int totalParts = listSize + (listSize - 1);
+
+        int emptyTime = 2;
+        int numOfText = answers.size() - 2;
         //get 4 second for time as intro and ending
-        int videoTimeWithPadding = videoLenght - (padding * 2);
-
-        List<Integer> timeText = new ArrayList<>();
-        int totalTimeTexts = 0;
+        int videoTimeWithPadding = videoLenght - emptyTime;
         //start from 2 because first two text ar as headers
+        int continueTime = emptyTime;
+        int pauseTime = (int)(videoTimeWithPadding / numOfText * 0.3);
+        int textTime = (int)(videoTimeWithPadding / numOfText * 0.7);
+
         for (int i = 2; i < answers.size(); i++) {
-            int time = (answers.get(i).getAnswer().length() / 18) + 1;
-            totalTimeTexts += time;
-            timeText.add(time);
-
+            answers.get(i).setFrom(continueTime);
+            answers.get(i).setTo(continueTime + textTime);
+            continueTime = continueTime + textTime + pauseTime;
         }
-
-
-        int videoTimeWithoutPaddingAndText = videoTimeWithPadding - totalTimeTexts;
-        int timeForPause = videoTimeWithoutPaddingAndText / (answers.size() - 2);
-
-        int startTime = padding;
-        for (int i = 2; i < answers.size(); i++) {
-            int time = (answers.get(i).getAnswer().length() / 18) + 1;
-            answers.get(i).setFrom(startTime);
-            answers.get(i).setTo(startTime + time);
-            startTime += time + timeForPause;
-        }
-
 
         return answers;
 
     }
+
+    /**
+     * Calculate time for each text in dependency of each answers text
+     * so that each text get a ratio of how long it should be shown to the user
+     * @param answers - texts to show in the video
+     * @param videoLenght - total video length
+     * @return - items with from and to
+     */
+    public static ArrayList<Answer> calculateSmartTimeShowForText(ArrayList<Answer> answers, int videoLenght) {
+
+        int emptyTime = 2;
+        int numOfText = answers.size() - 2;
+        //get 4 second for time as intro and ending
+        int videoTimeWithPadding = videoLenght - emptyTime;
+        //start from 2 because first two text ar as headers
+        int continueTime = emptyTime;
+        int pauseTime = (int)(videoTimeWithPadding / numOfText * 0.3);
+        int totalPauseTime = numOfText * pauseTime;
+
+        int totalTextTime = videoTimeWithPadding - totalPauseTime;
+
+        int totalTextChars = 0;
+        for (int i = 2; i < answers.size(); i++) {
+            totalTextChars += answers.get(i).getAnswer().length();
+        }
+
+
+        for (int i = 2; i < answers.size(); i++) {
+            answers.get(i).setFrom(continueTime);
+            int textLength = answers.get(i).getAnswer().length();
+            float textTime = totalTextTime * textLength / totalTextChars;
+            answers.get(i).setTo(continueTime + (int)textTime);
+            continueTime = continueTime + (int)textTime + pauseTime;
+        }
+
+        return answers;
+
+    }
+
+
 }
 

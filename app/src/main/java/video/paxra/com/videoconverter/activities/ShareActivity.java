@@ -14,6 +14,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,6 +32,8 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerSimple;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
+import video.paxra.com.videoconverter.models.VideoInfoPersistor;
+import video.paxra.com.videoconverter.service.YoutubeService;
 import video.paxra.com.videoconverter.utils.AssetUtil;
 import video.paxra.com.videoconverter.views.VideoPlayer;
 
@@ -38,6 +41,7 @@ public class ShareActivity extends AppCompatActivity {
 
     @Optional @InjectView(R.id.shareVideoView) JCVideoPlayerStandard mVideoView;
     @Optional @InjectView(R.id.back_btn) ImageView mBackImageView;
+    @Optional @InjectView(R.id.check_upload) CheckBox mCheckUploadView;
     AppEventsLogger logger;
     String fileOutPath = "";
     private boolean mVideoWasSaved;
@@ -78,18 +82,21 @@ public class ShareActivity extends AppCompatActivity {
     public void share(View view) {
         logger.logEvent("SHARE_VIDEO");
         shareVideo(this, fileOutPath);
+        uploadOnYoutbe(this, fileOutPath);
     }
+
 
     @Optional @OnClick(R.id.btn_save)
     public void saveVideo(View view) {
         logger.logEvent("SAVE_VIDEO");
         showSaveDialog();
+        uploadOnYoutbe(this, fileOutPath);
     }
 
 
     private void insertFileInMediaStore(String fileOutPath, String videoName) {
         Log.d("Title", fileOutPath);
-        fileOutPath =fileOutPath.replace("file://", "");
+        fileOutPath = fileOutPath.replace("file://", "");
         Log.d("Data", fileOutPath);
         ContentResolver cr = this.getContentResolver();
         ContentValues values = new ContentValues();
@@ -166,7 +173,7 @@ public class ShareActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(!mVideoWasSaved) {
+        if(!mVideoWasSaved && !mCheckUploadView.isChecked()) {
             removeTemporaryVideo(fileOutPath);
         }
     }
@@ -177,5 +184,18 @@ public class ShareActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void uploadOnYoutbe(Context context, String fileOutPath) {
+        if(mCheckUploadView.isChecked()) {
+            logger.logEvent("SAVE YOUTUBE");
+            Intent intent = new Intent(context, YoutubeService.class);
+            intent.putExtra(YoutubeService.TAG_PATH, fileOutPath);
+            intent.putExtra(YoutubeService.TAG_TITLE, VideoInfoPersistor.title);
+            intent.putExtra(YoutubeService.TAG_DESC, VideoInfoPersistor.title);
+            startService(intent);
+        }
+
+
     }
 }

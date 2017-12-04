@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/img_next"
-            android:text="Save"
+            android:text="@string/save_text"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 

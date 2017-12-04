@@ -11,7 +11,10 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by iuriegaitur on 11/26/16.
  */
-
+//@SecureConfigurations(
+//        useAesRandomly = true,
+//        certificateSignature = "1501784074"
+//)
 public class VideoConverterApp extends Application {
 
     @Override
@@ -21,5 +24,8 @@ public class VideoConverterApp extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         Log.d("Facebook", "Started");
+        //SecureEnvironment.initialize(this);
+
+        //@SecureKey(key = "token", value = "???");
     }
 }

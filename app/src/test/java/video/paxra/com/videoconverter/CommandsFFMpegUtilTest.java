@@ -24,18 +24,48 @@ public class CommandsFFMpegUtilTest extends TestCase {
     }
 
     @Test
-    public void testCalculateTimeForText() {
-        List<Answer> expectedResult = null;
-        String text = "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa";
+    public void testCalculateTimeForText_ReturnEquals() {
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add("02:05 ");
+        expectedResult.add("07:11 ");
+        expectedResult.add("13:16 ");
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer(1, "2012-05-14", "header"));
         answers.add(new Answer(2, "Chisinau, Moldova", "header"));
         answers.add(new Answer(3, "O grupa de activisti din Republica Moldova", "text"));
-        answers.add(new Answer(4, "Vreau unire cu Romania", "text"));
-        answers.add(new Answer(5, "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa", "text"));
+        //answers.add(new Answer(4, "Vreau unire cu Romania", "text"));
+        //answers.add(new Answer(5, "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa", "text"));
         //answers.add(new Answer(6, "Pot fi posibile incaierari dintre baieti", "text"));
 
-        List<Answer> actualResult = FFMpegUtils.calculateTimeShowForText(answers, 35);
+        List<Answer> actual = FFMpegUtils.calculateTimeShowForText(answers, 35);
+        List<String> actualResult = new ArrayList<>();
+        for(Answer answer: actual) {
+            actualResult.add(answer.from + ":" + answer.to + " ");
+        }
+
+        Assert.assertEquals("Text time are equals", expectedResult, actualResult);
+    }
+
+    @Test
+    public void testCalculateSmartTimeForText_ReturnEquals() {
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add("02:05 ");
+        expectedResult.add("07:11 ");
+        expectedResult.add("13:16 ");
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer(1, "2012-05-14", "header"));
+        answers.add(new Answer(2, "Chisinau, Moldova", "header"));
+        answers.add(new Answer(3, "O grupa de activisti din Republica Moldova", "text"));
+        //answers.add(new Answer(4, "Vreau unire cu Romania", "text"));
+        //answers.add(new Answer(5, "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa", "text"));
+        //answers.add(new Answer(6, "Pot fi posibile incaierari dintre baieti", "text"));
+
+        List<Answer> actual = FFMpegUtils.calculateSmartTimeShowForText(answers, 35);
+        List<String> actualResult = new ArrayList<>();
+        for(Answer answer: actual) {
+            actualResult.add(answer.from + ":" + answer.to + " ");
+        }
+
         Assert.assertEquals("Text time are equals", expectedResult, actualResult);
     }
 
@@ -46,7 +76,6 @@ public class CommandsFFMpegUtilTest extends TestCase {
         String text = "O grupa de activisti din Republica Moldova";
         int actualResult = AndroidUtilities.getNumberOfLines(text, 480, 720, 20);
 
-
         Assert.assertEquals("Number lines are equals", expectedResult, actualResult);
     }
 
@@ -55,7 +84,6 @@ public class CommandsFFMpegUtilTest extends TestCase {
         int expectedResult = 35;
         String text = "Au declara ca nu sunt buni de nimic si de";
         int actualResult = AndroidUtilities.getXStartPosition(text, 480, 20);
-
 
         Assert.assertEquals("X Positions are equals", expectedResult, actualResult);
     }

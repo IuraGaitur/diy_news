@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,7 +46,7 @@ import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.models.Answer;
-import video.paxra.com.videoconverter.utils.CommandsFFMpegUtil;
+import video.paxra.com.videoconverter.utils.FfmpegCommandBuilder;
 import video.paxra.com.videoconverter.utils.FFMpegUtils;
 import video.paxra.com.videoconverter.views.RingProgressBar;
 
@@ -56,7 +57,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     String outputFileName;
     private double mTotalFPS = 0;
     String fileName = "";
-    ArrayList<Answer> answers = new ArrayList<>();
+    List<Answer> answers = new ArrayList<>();
     String[] commands = {};
     private int mStartVideoPos = 0;
     private int mEndVideoPos = 0;
@@ -82,7 +83,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         ButterKnife.inject(this);
         initializeConvertion();
         Fabric.with(this, new Crashlytics());
-        answers = (ArrayList<Answer>) getIntent().getSerializableExtra(QuestionsFragment.TAG_ANSWERS);
+        answers = (List<Answer>) getIntent().getSerializableExtra(QuestionsFragment.TAG_ANSWERS);
         fileName = getIntent().getStringExtra(QuestionsFragment.TAG_FILE);
         mStartVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_START_POS, 0);
         mEndVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_END_POS, 0);
@@ -216,7 +217,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
                 @Override
                 public void onFinish() {
-                    initializeConvertingVideo(ConvertActivity.this, answers, fileName);
+                    initializeConvertingVideo(answers, fileName);
                 }
             });
         } catch (FFmpegNotSupportedException e) {
@@ -225,9 +226,9 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         }
     }
 
-    public void initializeConvertingVideo(Context context, ArrayList<Answer> answers, String fileName) {
+    public void initializeConvertingVideo(List<Answer> answers, String fileName) {
         String image = getExternalFilesDir(null) + "/icon_trans.png";;
-        String fontFile = this.getExternalFilesDir(null) + "/AvenirNext-DemiBold.ttf";
+        String fontFile = this.getExternalFilesDir(null) + "/font_simple.ttf";
         // Generate random file name for video
         outputFileName = fileName.split("\\.")[fileName.split("\\.").length - 1 ];
         String pattern = "MM_dd_yyyy";
@@ -239,8 +240,16 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         String replacer = "_" + date + number+ "." + outputFileName;
         outputFileName = fileName.replace("."+ outputFileName, replacer);
 
-        commands = CommandsFFMpegUtil.buildCommand(fileName, outputFileName, answers, fontFile, image, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
+
+        //Build commands for converting video
+        FfmpegCommandBuilder commandBuilder = FfmpegCommandBuilder.getInstance().setInput(fileName).setOutput(outputFileName)
+                .setFont(fontFile).setTexts(answers).setImage(image).setWidth(mVideoWidth)
+                .setHeight(mVideoHeight).setCropFrom(mStartVideoPos).setCropTo(mEndVideoPos);
+
+        commands = commandBuilder.build();
+
         getInfoAboutVideo(this, fileName);
+        //commands = FfmpegCommandBuilder.buildCommand(fileName, outputFileName, answers, fontFile, image, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
     }
 
     public void getInfoAboutVideo(Context context, final String fileName) {
@@ -324,6 +333,4 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
             out.write(buffer, 0, read);
         }
     }
-
-
 }

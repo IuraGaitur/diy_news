@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@android:color/white">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/header"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/header">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,15 +46,15 @@
                 layout="@layout/view_divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
+                android:layout_margin="7dp" />
 
             <Button
                 android:id="@+id/btn_share"
                 android:layout_width="130dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/btn_oval_gray"
                 android:text="@string/share_text"
                 android:textAllCaps="false"
@@ -67,15 +65,15 @@
                 layout="@layout/view_divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
+                android:layout_margin="7dp" />
 
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="130dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/btn_oval"
                 android:text="@string/save_text"
                 android:textAllCaps="false"
@@ -86,20 +84,62 @@
                 layout="@layout/view_divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
+                android:layout_margin="7dp" />
 
             <Button
                 android:id="@+id/btn_exit"
                 android:layout_width="130dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/btn_oval_gray"
                 android:text="@string/exit_text"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
+
+            <include
+                layout="@layout/view_divider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <RelativeLayout
+                    android:id="@+id/check_layout"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp">
+
+                    <CheckBox
+                        android:id="@+id/check_upload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:button="@drawable/check_share"
+                        android:checked="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_alignParentRight="true"
+                        android:textAllCaps="false" />
+
+                </RelativeLayout>
+
+                <video.paxra.com.videoconverter.views.FontTextViewRegular
+                    android:id="@+id/text_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/check_upload"
+                    android:layout_toRightOf="@id/check_layout"
+                    android:textColor="@color/gray_dark" />
+
+
+            </RelativeLayout>
+
 
         </LinearLayout>
 
@@ -109,10 +149,10 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/transparent_black_eighty"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent_black_eighty">
 
         <ImageView
             android:id="@+id/back_btn"

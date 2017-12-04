@@ -10,10 +10,90 @@ import video.paxra.com.videoconverter.models.Answer;
 /**
  * Created by iura on 7/2/16.
  */
-public class CommandsFFMpegUtil {
+public class FfmpegCommandBuilder {
+
+    private static FfmpegCommandBuilder mInstance;
+
+    private List<String> mCommands = new ArrayList<>();
+
+    private String mInputFile;
+    private String mOutputFile;
+    private List<Answer> mTexts;
+    private String mFontFile;
+    private String mImagePath;
+    private int mOutputWidth;
+    private int mOutputHeight;
+    private int mCropFrom;
+    private int mCropTo;
+
+    private FfmpegCommandBuilder() {}
+
+    public static FfmpegCommandBuilder getInstance() {
+        if(mInstance == null) {
+            mInstance = new FfmpegCommandBuilder();
+        }
+
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setInput(String input) {
+        this.mInputFile = input;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setOutput(String output) {
+        this.mOutputFile = output;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setTexts(List<Answer> texts) {
+        this.mTexts = texts;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setFont(String font) {
+        this.mFontFile = font;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setImage(String image) {
+        this.mImagePath = image;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setWidth(int width) {
+        this.mOutputWidth = width;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setHeight(int height) {
+        this.mOutputHeight = height;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setCropFrom(int from) {
+        this.mCropFrom = from;
+        return mInstance;
+    }
+
+    public FfmpegCommandBuilder setCropTo(int to) {
+        this.mCropTo = to;
+        return mInstance;
+    }
+
+    public String[] build() {
+        return mCommands.toArray();
+    }
+
+
+    private void addCrop() {
+
+    }
+
+
+
     public static String[] buildCommand(String inputFile, String outputFile, ArrayList<Answer> answers, String fontFile, String imagePath, int screenWidth, int screenHeight, int cropFrom, int cropTo) {
-        int paddingBottom = 26;
-        int fontSize = (960 + 540) / 50;
+
         int videoDuration = cropTo - cropFrom;
         List<String> data = new ArrayList();
         StringBuilder result = new StringBuilder();
@@ -37,8 +117,8 @@ public class CommandsFFMpegUtil {
 
         for (int i = 1; i < answers.size(); i++) {
 
-            int lineNumber = AndroidUtilities.getNumberOfLines(answers.get(i).answer, finalWidth, finalHeight, fontSize);
-            int yPos = AndroidUtilities.getYStartPosition(finalHeight, 1, lineNumber, fontSize, paddingBottom);
+            int lineNumber = AndroidUtilities.getNumberOfLines(answers.get(i).answer, finalWidth, finalHeight, Constants.HEADER_FONT_SIZE);
+            int yPos = AndroidUtilities.getYStartPosition(finalHeight, 1, lineNumber, Constants.HEADER_FONT_SIZE, Constants.BOTTOM_PADDING);
             Log.d("Information", "Width:" + screenWidth + ";Height:" + screenHeight + ";lineNum:" + lineNumber + ";yPos:" + yPos);
             String item = "";
 
@@ -50,10 +130,10 @@ public class CommandsFFMpegUtil {
                                 ": fontcolor=white:shadowcolor=black:shadowx=1:shadowy=1: fontsize=" + (960+540)/60 + ": x=(w-text_w)/1.07: y=35 + th", 0, videoDuration, fontFile, answers.get(1).getAnswer().replace(":", "\\:").replace("'", "'\\\\\\''"));
                 result.append(item);
             } else {
-                int charsPerLine = AndroidUtilities.getCharsPerLine(finalWidth, fontSize);
+                int charsPerLine = AndroidUtilities.getCharsPerLine(finalWidth, Constants.TEXT_FONT_SIZE);
                 List<String> cutAnswer = StringUtils.splitStringIntoParts(answers.get(i).answer, charsPerLine);
                 for (int j = 0; j < cutAnswer.size(); j++) {
-                    yPos = AndroidUtilities.getYStartPosition(finalHeight, j+1, lineNumber, fontSize, paddingBottom);
+                    yPos = AndroidUtilities.getYStartPosition(finalHeight, j+1, lineNumber, Constants.TEXT_FONT_SIZE, Constants.BOTTOM_PADDING);
 
                     Log.d("Y Pos", "Y pos" + yPos);
 
