@@ -38,19 +38,19 @@ public class AssetUtil {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        // NOOP
                     }
                 }
                 if (out != null) {
                     try {
                         out.close();
                     } catch (IOException e) {
-                        // NOOP
+
                     }
                 }
             }
         }
     }
+
     private static void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;

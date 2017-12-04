@@ -2,14 +2,16 @@ package video.paxra.com.videoconverter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.Px;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+import video.paxra.com.videoconverter.models.Answer;
+import video.paxra.com.videoconverter.utils.Constants;
 
 /**
  * Created by iuriegaitur on 12/2/17.
@@ -17,37 +19,71 @@ import android.widget.TextView;
 
 public class TestActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-        initTextViewComponent();
-    }
+  TextView textView;
 
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_test);
+    List<Answer> answers = getTestAnswers();
+    initTextViewComponent();
+    getFormatedAnswers(answers);
+  }
 
+  private void initTextViewComponent() {
+    textView = (TextView) findViewById(R.id.text);
+    textView.setVisibility(View.VISIBLE);
+    textView.setLayoutParams(
+        new RelativeLayout.LayoutParams(Constants.VIDEO_WIDTH - Constants.MARGIN_PADDING,
+            RelativeLayout.LayoutParams.WRAP_CONTENT));
+  }
 
-    private void initTextViewComponent() {
-        final TextView textView = (TextView) findViewById(R.id.text);
-        textView.setVisibility(View.INVISIBLE);
-        textView.setLayoutParams(new RelativeLayout.LayoutParams(620, RelativeLayout.LayoutParams.WRAP_CONTENT));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 32);
-        textView.setText("Aici este un text super lung de aceeea eu al impart pe mai multe nivele, blasdasdblasdlbasd ;adshasdsajkd adskljadslkjaslkd sadlkjadslkjsad sadlkjasdkljasd dsalkjdas ");
+  private void getFormatedAnswers(final List<Answer> answers) {
 
-        //get line numbers
-        int lineHeigh = textView.getLineHeight();
-        //get line number
-        int lineNumber = textView.getMeasuredHeight();
-        textView.post(new Runnable() {
-            @Override
-            public void run() {
-                int lineCount = textView.getLineCount();
-                int height = textView.getMeasuredHeight();
-                Log.d("App", "Tag");
-                // Use lineCount here
-            }
-        });
-        Log.d("App", "Tag");
+    postItem(answers, 0);
+  }
 
+  private void postItem(final List<Answer> answers, final int counter) {
 
-    }
+    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Constants.TEXT_FONT_SIZE);
+    textView.setText(answers.get(counter).answer);
+
+    textView.post(new Runnable() {
+      @Override public void run() {
+        int height = textView.getMeasuredHeight();
+        answers.get(counter).height = height;
+        int lineCount = textView.getLineCount();
+
+        List<String> data = new ArrayList<String>();
+        for (int i = 0; i < lineCount; i++) {
+          int startPos = textView.getLayout().getLineStart(i);
+          int endPos = textView.getLayout().getLineEnd(i);
+          data.add(answers.get(counter).getAnswer().substring(startPos, endPos));
+        }
+        answers.get(counter).splittedText = data;
+
+        if (counter == answers.size() - 1) {
+          useVariables(answers);
+        } else {
+          postItem(answers, counter + 1);
+        }
+      }
+    });
+  }
+
+  private void useVariables(List<Answer> tempAnswers) {
+    Log.d("App", "Data");
+  }
+
+  public List<Answer> getTestAnswers() {
+    return new ArrayList<Answer>() {{
+      add(new Answer(1, "2012-05-14", "header"));
+      add(new Answer(2, "Chisinau, Moldova", "header"));
+      add(new Answer(3, "O grupa de activisti din Republica Moldova", "text"));
+      add(new Answer(4, "Vreau unire cu Romania", "text"));
+      add(new Answer(5,
+          "Au declarat ca nu sunt buni de nimic si de aceea o sa lese postul si o sa plece acasa",
+          "text"));
+      add(new Answer(6, "Pot fi posibile incaierari dintre baieti", "text"));
+    }};
+  }
 }

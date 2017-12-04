@@ -1,7 +1,6 @@
 package video.paxra.com.videoconverter.utils;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
@@ -12,14 +11,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import video.paxra.com.videoconverter.activities.ConvertActivity;
-import video.paxra.com.videoconverter.activities.Convertable;
-import video.paxra.com.videoconverter.activities.MainActivity;
+import video.paxra.com.videoconverter.interfaces.Convertable;
 import video.paxra.com.videoconverter.models.Answer;
 
 /**
@@ -29,45 +24,26 @@ public class FFMpegUtils {
 
     public static void convertVideo(Context context, final Convertable resolver, String[] text) {
 
-        /*String[] texts = inputs;
-        String inputName = filePath;
-        String outputName = fileOutPath = PathUtil.getPathFromFile(filePath) + TimeUtil.getTime()+".mp4";
-        String imageName = PathUtil.getPathFromFile(filePath) + "ic_app.png";
-        String[] cmds = FfmpegCommandBuilder.buildCommand(inputName, outputName, texts, font);*/
-
-        Log.d("Convert", "Convert video");
-        Log.d("Commands", text.length + "");
         FFmpeg ffmpeg = FFmpeg.getInstance(context);
         try {
-            // to execute "ffmpeg -version" command you just need to pass "-version"
             ffmpeg.execute(text, new ExecuteBinaryResponseHandler() {
                 @Override
-                public void onStart() {
-                    resolver.onStartConvert();
-                }
+                public void onStart() {resolver.onStartConvert();}
 
                 @Override
-                public void onProgress(String message) {
-                    resolver.onProgressConvert(message);
-                }
+                public void onProgress(String message) {resolver.onProgressConvert(message);}
 
                 @Override
-                public void onFailure(String message) {
-                    resolver.onFailureConvert(message);
-                }
+                public void onFailure(String message) {resolver.onFailureConvert(message);}
 
                 @Override
-                public void onSuccess(String message) {
-                    resolver.onSuccessConvert(message);
-                }
+                public void onSuccess(String message) {resolver.onSuccessConvert(message);}
 
                 @Override
-                public void onFinish() {
-                    resolver.onFinishConvert();
-                }
+                public void onFinish() {resolver.onFinishConvert();}
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
-
+            e.printStackTrace();
         }
 
     }
@@ -75,11 +51,9 @@ public class FFMpegUtils {
 
     public static void getInfo(Context context, final Convertable resolver, String fileName) {
         String[] commands = ("-i " + fileName).split(" ");
-        Log.d("FileName", fileName);
         FFmpeg ffmpeg = FFmpeg.getInstance(context);
 
         try {
-            // to execute "ffmpeg -version" command you just need to pass "-version"
             ffmpeg.execute(commands, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onStart() {
@@ -106,7 +80,6 @@ public class FFMpegUtils {
                         if(counter == 2) fps = matcher.group(counter);
                         counter++;
                     }
-                    Log.d("Time", time);
                     SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.SS");
                     double totalFPS = 0;
                     try {
@@ -139,7 +112,13 @@ public class FFMpegUtils {
         }
     }
 
-    public static String formatTimeForFFmpeg(int time) {
+    /**
+     * Format long time in a format that is used for ffmpeg library
+     * the default format is 00:00:00 what is done is seconds
+     * @param time
+     * @return
+     */
+    public static String formatTime(int time) {
         if(time < 10) {
             return "00:00:0"+ time;
         }else if(time < 60) {
@@ -190,23 +169,24 @@ public class FFMpegUtils {
     public static ArrayList<Answer> calculateSmartTimeShowForText(ArrayList<Answer> answers, int videoLenght) {
 
         int emptyTime = 2;
-        int numOfText = answers.size() - 2;
+        int HEADERS_ANSWERS = 2;
+        double RATIO_PAUSE_TIME_DISPLAY = 0.3;
+
+        int numOfText = answers.size() - HEADERS_ANSWERS;
         //get 4 second for time as intro and ending
         int videoTimeWithPadding = videoLenght - emptyTime;
         //start from 2 because first two text ar as headers
         int continueTime = emptyTime;
-        int pauseTime = (int)(videoTimeWithPadding / numOfText * 0.3);
+        int pauseTime = (int)(videoTimeWithPadding / numOfText * RATIO_PAUSE_TIME_DISPLAY);
         int totalPauseTime = numOfText * pauseTime;
-
         int totalTextTime = videoTimeWithPadding - totalPauseTime;
-
         int totalTextChars = 0;
-        for (int i = 2; i < answers.size(); i++) {
+
+        for (int i = HEADERS_ANSWERS; i < answers.size(); i++) {
             totalTextChars += answers.get(i).getAnswer().length();
         }
 
-
-        for (int i = 2; i < answers.size(); i++) {
+        for (int i = HEADERS_ANSWERS; i < answers.size(); i++) {
             answers.get(i).setFrom(continueTime);
             int textLength = answers.get(i).getAnswer().length();
             float textTime = totalTextTime * textLength / totalTextChars;
