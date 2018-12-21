@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,9 +15,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -35,10 +39,12 @@ import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.interfaces.Convertable;
 import video.paxra.com.videoconverter.models.Answer;
+import video.paxra.com.videoconverter.models.Line;
 import video.paxra.com.videoconverter.utils.AssetUtil;
 import video.paxra.com.videoconverter.utils.Constants;
 import video.paxra.com.videoconverter.utils.FFMpegUtils;
-import video.paxra.com.videoconverter.utils.FfmpegCommandBuilder;
+import video.paxra.com.videoconverter.utils.FfmpegCommandBuilder2;
+import video.paxra.com.videoconverter.utils.FirebaseUtil;
 import video.paxra.com.videoconverter.utils.StringUtils;
 import video.paxra.com.videoconverter.views.RingProgressBar;
 
@@ -49,6 +55,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
   @InjectView(R.id.progress_bar_2) RingProgressBar mPgbView;
   @InjectView(R.id.btn_cancel) Button mCancelBtnView;
+  @InjectView(R.id.text) TextView textView;
 
   String fileName;
   String outputFileName;
@@ -72,11 +79,13 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_converter);
     ButterKnife.inject(this);
-    initializeConvertion();
     Fabric.with(this, new Crashlytics());
     parseExtras();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     logScreen();
+
+    initTextViewComponent();
+    formatedAnswers(answers);
   }
 
   private void parseExtras() {
@@ -153,6 +162,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   @Override public void onFailureConvert(String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG);
     logger.logEvent("Error:" + message);
+    FirebaseUtil.logFailConvert(this, message);
     Log.d("Failure", message);
   }
 
@@ -164,11 +174,14 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     values.put(MediaStore.Video.Media.DATA, outputFileName);
     Uri uri = cr.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
     Log.d("Success", message);
+    FirebaseUtil.logSuccessConvert(this);
   }
 
   @OnClick(R.id.btn_cancel) public void cancelConverting(View view) {
     super.onBackPressed();
-    mConvertHandler.removeCallbacks(mConvertRunnable);
+    if(mConvertHandler != null) {
+      mConvertHandler.removeCallbacks(mConvertRunnable);
+    }
   }
 
   @Override public void onBackPressed() {
@@ -210,7 +223,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     outputFileName = StringUtils.generateRandomFromName(fileName);
 
     //Build commands for converting video
-    FfmpegCommandBuilder commandBuilder = FfmpegCommandBuilder.getInstance()
+    FfmpegCommandBuilder2 commandBuilder = FfmpegCommandBuilder2.getInstance()
         .setInput(fileName)
         .setOutput(outputFileName)
         .setFont(fontFile)
@@ -224,7 +237,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     commands = commandBuilder.build();
 
     getInfoAboutVideo(this, fileName);
-    //commands = FfmpegCommandBuilder.buildCommand(fileName, outputFileName, answers, fontFile, image, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
+
   }
 
   public void getInfoAboutVideo(Context context, final String fileName) {
@@ -253,4 +266,49 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
       }
     }, fileName);
   }
+
+  private void initTextViewComponent() {
+    textView = (TextView) findViewById(R.id.text);
+    textView.setVisibility(View.INVISIBLE);
+    textView.setLayoutParams(
+        new RelativeLayout.LayoutParams(Constants.VIDEO_WIDTH - Constants.MARGIN_PADDING,
+            RelativeLayout.LayoutParams.WRAP_CONTENT));
+  }
+
+  private void formatedAnswers(final List<Answer> answers) {
+    postItem(answers, 0);
+  }
+
+  private void postItem(final List<Answer> answers, final int counter) {
+
+    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Constants.TEXT_FONT_SIZE);
+    textView.setText(answers.get(counter).answer);
+
+    textView.post(new Runnable() {
+      @Override public void run() {
+        int height = textView.getMeasuredHeight();
+        answers.get(counter).height = height;
+        int lineCount = textView.getLineCount();
+
+        List<Line> data = new ArrayList<Line>();
+        for (int i = 0; i < lineCount; i++) {
+          int startPos = textView.getLayout().getLineStart(i);
+          int endPos = textView.getLayout().getLineEnd(i);
+          Rect rect = new Rect();
+          textView.getLayout().getLineBounds(i, rect);
+          String text = answers.get(counter).getAnswer().substring(startPos, endPos);
+          int calcHeight = rect.height();
+          data.add(new Line(i, calcHeight, text));
+        }
+        answers.get(counter).splittedText = data;
+
+        if (counter == answers.size() - 1) {
+          initializeConvertion();
+        } else {
+          postItem(answers, counter + 1);
+        }
+      }
+    });
+  }
+
 }

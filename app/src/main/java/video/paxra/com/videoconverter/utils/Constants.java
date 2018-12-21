@@ -6,11 +6,11 @@ package video.paxra.com.videoconverter.utils;
 
 public class Constants {
 
-    public final static int VIDEO_WIDTH = 640;
-    public final static int VIDEO_HEIGHT = 360;
+    public final static int VIDEO_WIDTH = 854;
+    public final static int VIDEO_HEIGHT = 480;
 
-    public final static int HEADER_FONT_SIZE = 25;
-    public final static int TEXT_FONT_SIZE = 28;
+    public final static int HEADER_FONT_SIZE = 30;
+    public final static int TEXT_FONT_SIZE = 34;
 
     public final static int BOTTOM_PADDING = 25;
     public final static int MARGIN_PADDING = 30;

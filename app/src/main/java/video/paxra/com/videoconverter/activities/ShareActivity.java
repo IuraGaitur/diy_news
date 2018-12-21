@@ -35,6 +35,7 @@ import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.models.VideoInfoPersistor;
 import video.paxra.com.videoconverter.service.YoutubeService;
 import video.paxra.com.videoconverter.utils.AssetUtil;
+import video.paxra.com.videoconverter.utils.FirebaseUtil;
 import video.paxra.com.videoconverter.views.VideoPlayer;
 
 public class ShareActivity extends AppCompatActivity {
@@ -58,6 +59,7 @@ public class ShareActivity extends AppCompatActivity {
         setVideoUrl(fileOutPath);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         logger = AppEventsLogger.newLogger(this);
+        FirebaseUtil.logShare(this);
     }
 
 
@@ -71,6 +73,7 @@ public class ShareActivity extends AppCompatActivity {
     @Optional @OnClick(R.id.btn_exit)
     public void exit(View view) {
         logger.logEvent("EXIT_APPLICATION");
+        FirebaseUtil.logQuit(this);
         Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
@@ -83,12 +86,14 @@ public class ShareActivity extends AppCompatActivity {
         logger.logEvent("SHARE_VIDEO");
         shareVideo(this, fileOutPath);
         uploadOnYoutbe(this, fileOutPath);
+        FirebaseUtil.logShareApp(this);
     }
 
 
     @Optional @OnClick(R.id.btn_save)
     public void saveVideo(View view) {
         logger.logEvent("SAVE_VIDEO");
+        FirebaseUtil.logSave(this);
         showSaveDialog();
         uploadOnYoutbe(this, fileOutPath);
     }
@@ -147,7 +152,7 @@ public class ShareActivity extends AppCompatActivity {
         sharingIntent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(sharingIntent, "share:"));
 
-    }
+    }b
 
     @Optional @OnClick(R.id.back_btn)
     public void backBtnClick(View view) {
@@ -189,6 +194,7 @@ public class ShareActivity extends AppCompatActivity {
     private void uploadOnYoutbe(Context context, String fileOutPath) {
         if(mCheckUploadView.isChecked()) {
             logger.logEvent("SAVE YOUTUBE");
+            FirebaseUtil.logYoutube(this);
             Intent intent = new Intent(context, YoutubeService.class);
             intent.putExtra(YoutubeService.TAG_PATH, fileOutPath);
             intent.putExtra(YoutubeService.TAG_TITLE, VideoInfoPersistor.title);

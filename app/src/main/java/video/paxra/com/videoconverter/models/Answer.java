@@ -22,7 +22,7 @@ public class Answer implements Serializable {
 
   public int height;
 
-  public List<String> splittedText;
+  public List<Line> splittedText;
 
   public String type;
   public String answer;
@@ -30,7 +30,7 @@ public class Answer implements Serializable {
 
   public Answer(int id, String answer, String type) {
     this.id = id;
-    this.answer = answer;
+    this.answer = answer.replace(" ", "^*");
     this.type = type;
   }
 

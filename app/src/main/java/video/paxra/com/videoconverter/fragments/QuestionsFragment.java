@@ -42,6 +42,7 @@ import video.paxra.com.videoconverter.activities.TextTimelineActivity;
 import video.paxra.com.videoconverter.models.Answer;
 import video.paxra.com.videoconverter.models.VideoInfoPersistor;
 import video.paxra.com.videoconverter.utils.FFMpegUtils;
+import video.paxra.com.videoconverter.utils.FirebaseUtil;
 import video.paxra.com.videoconverter.utils.StringUtils;
 
 /**
@@ -150,6 +151,7 @@ public class QuestionsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_questions, null);
         ButterKnife.inject(this, view);
         logger.logEvent("CONVERT_VIDEO_STARTED");
+        FirebaseUtil.logAnswer(getActivity());
         return view;
     }
 
@@ -190,32 +192,26 @@ public class QuestionsFragment extends Fragment {
 
     public ArrayList<Answer> getAnswers(int videoLength) {
         List<Answer> answers = new ArrayList<>();
-        int totalLength = 0;
+
 
         if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
             answers.add(new Answer(1, mAnswer1EditView.getText().toString(), "header"));
-            totalLength += mAnswer1EditView.getText().toString().length();
         }
         if (mAnswer2EditView.getText().toString() != null && mAnswer2EditView.getText().toString() != "") {
             answers.add(new Answer(2, mAnswer2EditView.getText().toString(), "header"));
-            totalLength += mAnswer2EditView.getText().toString().length();
         }
         if (mAnswer3EditView.getText().toString() != null && mAnswer3EditView.getText().toString() != "") {
             VideoInfoPersistor.title = mAnswer3EditView.getText().toString().toUpperCase();
             answers.add(new Answer(3, mAnswer3EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer3EditView.getText().toString().length();
         }
         if (mAnswer4EditView.getText().toString() != null && mAnswer4EditView.getText().toString() != "") {
             answers.add(new Answer(4, mAnswer4EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer4EditView.getText().toString().length();
         }
         if (mAnswer5EditView.getText().toString() != null && mAnswer5EditView.getText().toString() != "") {
             answers.add(new Answer(5, mAnswer5EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer5EditView.getText().toString().length();
         }
         if (mAnswer6EditView.getText().toString() != null && mAnswer6EditView.getText().toString() != "") {
             answers.add(new Answer(6, mAnswer6EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer6EditView.getText().toString().length();
         }
 
         answers = FFMpegUtils.calculateSmartTimeShowForText((ArrayList) answers, videoLength);

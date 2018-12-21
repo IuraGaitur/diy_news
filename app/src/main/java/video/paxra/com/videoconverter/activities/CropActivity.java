@@ -23,6 +23,7 @@ import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
+import video.paxra.com.videoconverter.utils.FirebaseUtil;
 import video.paxra.com.videoconverter.utils.TimeUtil;
 import video.paxra.com.videoconverter.views.VideoPlayer;
 import video.paxra.com.videoconverter.views.VideoTimelineView;
@@ -155,6 +156,7 @@ public class CropActivity extends AppCompatActivity {
         mEndPos = (int) mEndPos / 1000;
         logger.logEvent("VIDEO_WIDTH:" + mVideoWidth + "; VIDEO_HEIGHT:" + mVideoHeight + ";VIDEO_DURATION:" + (mEndPos - mStartPos));
         logger.logEvent("TRIM_VIDEO_SELECTED");
+        FirebaseUtil.logCut(this, mStartPos, mEndPos, mEndPos - mStartPos);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(TAG_START_POS, mStartPos);

@@ -10,6 +10,7 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunnin
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +25,7 @@ public class FFMpegUtils {
 
     public static void convertVideo(Context context, final Convertable resolver, String[] text) {
 
+        Log.d("Commands", Arrays.toString(text));
         FFmpeg ffmpeg = FFmpeg.getInstance(context);
         try {
             ffmpeg.execute(text, new ExecuteBinaryResponseHandler() {
@@ -175,6 +177,8 @@ public class FFMpegUtils {
         int numOfText = answers.size() - HEADERS_ANSWERS;
         //get 4 second for time as intro and ending
         int videoTimeWithPadding = videoLenght - emptyTime;
+        //subtract default time for each video so that each should have at least 1 second
+        videoTimeWithPadding = videoTimeWithPadding - (answers.size() - HEADERS_ANSWERS);
         //start from 2 because first two text ar as headers
         int continueTime = emptyTime;
         int pauseTime = (int)(videoTimeWithPadding / numOfText * RATIO_PAUSE_TIME_DISPLAY);
@@ -190,6 +194,7 @@ public class FFMpegUtils {
             answers.get(i).setFrom(continueTime);
             int textLength = answers.get(i).getAnswer().length();
             float textTime = totalTextTime * textLength / totalTextChars;
+            textTime = textTime + 1;// add default time
             answers.get(i).setTo(continueTime + (int)textTime);
             continueTime = continueTime + (int)textTime + pauseTime;
         }

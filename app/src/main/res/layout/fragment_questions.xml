@@ -230,6 +230,7 @@
                     style="@style/edit_questions"
                     android:background="@android:color/transparent"
                     android:text=""
+                    android:hint="@string/tip_6"
                     android:textCursorDrawable="@null" />
 
             </android.support.design.widget.TextInputLayout>

@@ -3,7 +3,6 @@ package video.paxra.com.videoconverter.views;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
 import video.paxra.com.videoconverter.utils.FontCache;
 
 /**
@@ -31,7 +30,7 @@ public class FontTextViewGood extends android.support.v7.widget.AppCompatTextVie
   }
 
   private void applyCustomFont(Context context) {
-    Typeface customFont = FontCache.getTypeface("font_simple.ttf", context);
+    Typeface customFont = FontCache.getTypeface("resources/font_simple.ttf", context);
     setTypeface(customFont);
   }
 }

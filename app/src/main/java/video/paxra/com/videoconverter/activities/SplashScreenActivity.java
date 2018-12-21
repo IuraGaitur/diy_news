@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.utils.AndroidUtilities;
+import video.paxra.com.videoconverter.utils.FirebaseUtil;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -25,6 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         AndroidUtilities.checkDisplaySize(this, this.getResources().getConfiguration());
 
+        FirebaseUtil.logSplash(this);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,6 +1,7 @@
 package video.paxra.com.videoconverter;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -15,7 +16,7 @@ import io.fabric.sdk.android.Fabric;
 //        useAesRandomly = true,
 //        certificateSignature = "1501784074"
 //)
-public class VideoConverterApp extends Application {
+public class VideoConverterApp extends MultiDexApplication {
 
     @Override
     public void onCreate() {
