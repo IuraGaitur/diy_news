@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import video.paxra.com.videoconverter.R;
@@ -27,7 +27,7 @@ import video.paxra.com.videoconverter.views.VideoPlayerStandart;
  */
 public class VideoFragment extends Fragment {
 
-    @InjectView(R.id.videoview) VideoPlayerStandart mVideoView;
+    @BindView(R.id.videoview) VideoPlayerStandart mVideoView;
     private String videoUrl;
     private int mVideoWidth;
     private int mVideoHeight;
@@ -83,7 +83,7 @@ public class VideoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_video, null);
-        ButterKnife.inject(this, root);
+        ButterKnife.bind(this, root);
         return root;
     }
 

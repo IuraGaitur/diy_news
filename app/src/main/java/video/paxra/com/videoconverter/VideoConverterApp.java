@@ -8,10 +8,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import io.fabric.sdk.android.Fabric;
 
-/**
- * Created by iuriegaitur on 11/26/16.
- */
-
 public class VideoConverterApp extends Application {
 
     @Override
@@ -20,6 +16,5 @@ public class VideoConverterApp extends Application {
         Fabric.with(this, new Crashlytics());
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-        Log.d("Facebook", "Started");
     }
 }

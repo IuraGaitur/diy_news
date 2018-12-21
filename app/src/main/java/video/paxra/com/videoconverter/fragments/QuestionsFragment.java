@@ -26,10 +26,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 import video.paxra.com.videoconverter.R;
@@ -47,31 +46,31 @@ import video.paxra.com.videoconverter.utils.StringUtils;
  */
 public class QuestionsFragment extends Fragment {
 
-    @Optional
-    @InjectView(R.id.editText)
+    @BindView(R.id.editText)
     EditText mAnswer1EditView;
-    @Optional
-    @InjectView(R.id.editText2)
-    EditText mAnswer2EditView;
-    @Optional
-    @InjectView(R.id.editText3)
-    EditText mAnswer3EditView;
-    @Optional
-    @InjectView(R.id.editText4)
-    EditText mAnswer4EditView;
-    @Optional
-    @InjectView(R.id.editText5)
-    EditText mAnswer5EditView;
-    @Optional
-    @InjectView(R.id.editText6)
-    EditText mAnswer6EditView;
-    @Optional
-    @InjectView(R.id.btn_generate)
-    Button mGenerateBtnView;
-    @InjectView(R.id.main_parent)
-    LinearLayout mLlvMainLView;
-    String mErrorMustComplete;
 
+    @BindView(R.id.editText2)
+    EditText mAnswer2EditView;
+
+    @BindView(R.id.editText3)
+    EditText mAnswer3EditView;
+
+    @BindView(R.id.editText4)
+    EditText mAnswer4EditView;
+
+    @BindView(R.id.editText5)
+    EditText mAnswer5EditView;
+
+    @BindView(R.id.editText6)
+    EditText mAnswer6EditView;
+
+    @BindView(R.id.btn_generate)
+    Button mGenerateBtnView;
+
+    @BindView(R.id.main_parent)
+    LinearLayout mLlvMainLView;
+
+    String mErrorMustComplete;
 
     public final static String TAG_ANSWERS = "answers";
     public static final String TAG_FILE = "file";
@@ -126,7 +125,7 @@ public class QuestionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_questions, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         logger.logEvent("CONVERT_VIDEO_STARTED");
         return view;
     }

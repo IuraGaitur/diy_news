@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
@@ -29,13 +29,13 @@ import video.paxra.com.videoconverter.views.VideoTimelineView;
 
 public class CropActivity extends AppCompatActivity {
 
-    @InjectView(R.id.timelineview) VideoTimelineView mVideoTimelineView;
-    @InjectView(R.id.videoview) JCVideoPlayerStandard mVideoView;
-    @InjectView(R.id.img_next) ImageView mNextImageView;
-    @InjectView(R.id.text_next) TextView mNextTextView;
-    @InjectView(R.id.text_from_sec) TextView mFromSecTextView;
-    @InjectView(R.id.text_to_sec) TextView mToSecTextView;
-    @InjectView(R.id.back_btn) ImageView mBackImageView;
+    @BindView(R.id.timelineview) VideoTimelineView mVideoTimelineView;
+    @BindView(R.id.videoview) JCVideoPlayerStandard mVideoView;
+    @BindView(R.id.img_next) ImageView mNextImageView;
+    @BindView(R.id.text_next) TextView mNextTextView;
+    @BindView(R.id.text_from_sec) TextView mFromSecTextView;
+    @BindView(R.id.text_to_sec) TextView mToSecTextView;
+    @BindView(R.id.back_btn) ImageView mBackImageView;
 
     AppEventsLogger logger;
 
@@ -60,7 +60,7 @@ public class CropActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
         path = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         loadTimeLine();
         Fabric.with(this, new Crashlytics());
         logger = AppEventsLogger.newLogger(this);
