@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
@@ -20,13 +20,13 @@ import video.paxra.com.videoconverter.views.VideoTimelineView;
 
 public class TextTimelineActivity extends AppCompatActivity {
 
-    @InjectView(R.id.timelineview) VideoTimelineView mVideoTimelineView;
-    @InjectView(R.id.videoview) JCVideoPlayerStandard mVideoView;
-    @InjectView(R.id.img_next) ImageView mNextImageView;
-    @InjectView(R.id.text_next) TextView mNextTextView;
-    @InjectView(R.id.text_from_sec) TextView mFromSecTextView;
-    @InjectView(R.id.text_to_sec) TextView mToSecTextView;
-    @InjectView(R.id.back_btn) ImageView mBackImageView;
+    @BindView(R.id.timelineview) VideoTimelineView mVideoTimelineView;
+    @BindView(R.id.videoview) JCVideoPlayerStandard mVideoView;
+    @BindView(R.id.img_next) ImageView mNextImageView;
+    @BindView(R.id.text_next) TextView mNextTextView;
+    @BindView(R.id.text_from_sec) TextView mFromSecTextView;
+    @BindView(R.id.text_to_sec) TextView mToSecTextView;
+    @BindView(R.id.back_btn) ImageView mBackImageView;
     String path;
 
     public static final String TAG_START_POS = "start";
@@ -49,7 +49,7 @@ public class TextTimelineActivity extends AppCompatActivity {
         mQuestionNumber = getIntent().getStringExtra(QuestionsFragment.TAG_QUESTION_NUMBER);
         mStartPos = getIntent().getIntExtra(CropActivity.TAG_WIDTH, 0);
         mEndPos = getIntent().getIntExtra(CropActivity.TAG_HEIGHT, 0);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         loadVideo(path);
         loadTimelineView(path);
     }

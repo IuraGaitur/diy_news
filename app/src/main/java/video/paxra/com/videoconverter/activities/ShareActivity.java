@@ -23,8 +23,8 @@ import com.facebook.appevents.AppEventsLogger;
 
 import java.io.IOException;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Optional;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerSimple;
@@ -36,8 +36,8 @@ import video.paxra.com.videoconverter.views.VideoPlayer;
 
 public class ShareActivity extends AppCompatActivity {
 
-    @Optional @InjectView(R.id.shareVideoView) JCVideoPlayerStandard mVideoView;
-    @Optional @InjectView(R.id.back_btn) ImageView mBackImageView;
+    @BindView(R.id.shareVideoView) JCVideoPlayerStandard mVideoView;
+    @BindView(R.id.back_btn) ImageView mBackImageView;
     AppEventsLogger logger;
     String fileOutPath = "";
     private boolean mVideoWasSaved;
@@ -50,7 +50,7 @@ public class ShareActivity extends AppCompatActivity {
         fileOutPath = getIntent().getStringExtra(MenuActivity.TAG_FILE_URI);
         duration = getIntent().getLongExtra(CropActivity.TAG_START_POS, 0);
         Fabric.with(this, new Crashlytics());
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         setVideoUrl(fileOutPath);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         logger = AppEventsLogger.newLogger(this);

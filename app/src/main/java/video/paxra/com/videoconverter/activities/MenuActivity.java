@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
@@ -30,10 +30,10 @@ public class MenuActivity extends AppCompatActivity {
 
     public final static String TAG_FILE_URI = "uri";
 
-    @InjectView(R.id.action_import) ImageView mIvImport;
-    @InjectView(R.id.action_record) ImageView mIvRecord;
-    @InjectView(R.id.pulsator1) PulsatorLayout pulsatorLayoutFirstView;
-    @InjectView(R.id.pulsator2) PulsatorLayout pulsatorLayoutSecondView;
+    @BindView(R.id.action_import) ImageView mIvImport;
+    @BindView(R.id.action_record) ImageView mIvRecord;
+    @BindView(R.id.pulsator1) PulsatorLayout pulsatorLayoutFirstView;
+    @BindView(R.id.pulsator2) PulsatorLayout pulsatorLayoutSecondView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MenuActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
         }
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         pulsatorLayoutFirstView.start();
         pulsatorLayoutSecondView.start();
         logger = AppEventsLogger.newLogger(this);

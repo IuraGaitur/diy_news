@@ -38,8 +38,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
@@ -51,8 +51,8 @@ import video.paxra.com.videoconverter.views.RingProgressBar;
 
 public class ConvertActivity extends AppCompatActivity implements Convertable {
 
-    @InjectView(R.id.progress_bar_2) RingProgressBar mPgbView;
-    @InjectView(R.id.btn_cancel) Button mCancelBtnView;
+    @BindView(R.id.progress_bar_2) RingProgressBar mPgbView;
+    @BindView(R.id.btn_cancel) Button mCancelBtnView;
     String outputFileName;
     private double mTotalFPS = 0;
     String fileName = "";
@@ -79,7 +79,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_converter);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         initializeConvertion();
         Fabric.with(this, new Crashlytics());
         answers = (ArrayList<Answer>) getIntent().getSerializableExtra(QuestionsFragment.TAG_ANSWERS);
