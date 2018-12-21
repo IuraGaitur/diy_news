@@ -60,6 +60,7 @@ dependencies {
 
     implementation 'fm.jiecao:jiecaovideoplayer:4.7.0'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.1.2'
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
