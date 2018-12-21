@@ -27,6 +27,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -64,5 +69,10 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
-
+    compile 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
+    compile 'com.library.tangxiaolv:telegramgallery:1.0.5'
+    compile 'com.droidninja:filepicker:2.1.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'com.google.firebase:firebase-core:11.6.0'
+    compile 'com.android.support:multidex:1.0.1'
 }

@@ -1,4 +1,4 @@
-package video.paxra.com.videoconverter.activities;
+package video.paxra.com.videoconverter.interfaces;
 
 /**
  * Created by iura on 9/30/16.

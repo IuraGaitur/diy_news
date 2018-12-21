@@ -31,4 +31,8 @@
     <string name="exit_text">Ieșire</string>
     <string name="share_header_text">Distribuie Știrea</string>
     <string name="must_not_empty">Trebuie completat</string>
+
+    <string name="cancel">Anulează</string>
+    <string name="check_upload">Sunt de acord ca acest fișier video să apară pe canalul de Youtube DIY News.</string>
+    <string name="not_enough_length">Durata videoului trebuie să fie mai mare ca 15 seconde</string>
 </resources>

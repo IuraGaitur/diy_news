@@ -1,13 +1,17 @@
 package video.paxra.com.videoconverter.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by iuriegaitur on 11/26/16.
  */
 
 public class StringUtils {
+
     public static List<String> splitStringIntoParts(String text, int charsPerLine) {
         int rowChars = 0;
         String[] parts = text.split(" ");
@@ -34,5 +38,19 @@ public class StringUtils {
         }
 
         return strings;
+    }
+
+    public static String generateRandomFromName(String fileName) {
+        String outputFileName = fileName.split("\\.")[fileName.split("\\.").length - 1];
+        String pattern = "MM_dd_yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        String date = format.format(new Date());
+        Random r = new Random();
+        int number = r.nextInt(1000);
+
+        String replacer = "_" + date + number + "." + outputFileName;
+        outputFileName = fileName.replace("." + outputFileName, replacer);
+
+        return outputFileName;
     }
 }

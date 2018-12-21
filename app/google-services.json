@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "785496267169",
+    "firebase_url": "https://diy-news.firebaseio.com",
+    "project_id": "diy-news",
+    "storage_bucket": "diy-news.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785496267169:android:e0f27532900977c4",
+        "android_client_info": {
+          "package_name": "video.paxra.com.videoconverter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785496267169-kiodda9liidpk38jutd82stmv4cel1bp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApDfDyJlZuiVOEe2hv1NoOauny_NGgM6A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785496267169-rsf831e4ch1kb3u1t070jfjsanko8fu2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.echipa.DIYNews",
+                "app_store_id": "1187629057"
+              }
+            },
+            {
+              "client_id": "785496267169-kiodda9liidpk38jutd82stmv4cel1bp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

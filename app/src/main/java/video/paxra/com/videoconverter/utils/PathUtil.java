@@ -19,28 +19,25 @@ public class PathUtil {
     public static String getPathFromFile(String fileName) {
         StringBuilder builder = new StringBuilder();
         String[] parts = fileName.split("/");
-        for(int i = 0;i< parts.length - 1; i++ ) {
-            builder.append(parts[i]+"/");
+        for (int i = 0; i < parts.length - 1; i++) {
+            builder.append(parts[i] + "/");
         }
         return builder.toString();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getRealPathFromURI_API19(Context context, Uri uri){
+    public static String getRealPathFromURI_API19(Context context, Uri uri) {
         String filePath = "";
         String wholeID = DocumentsContract.getDocumentId(uri);
 
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
-
-        String[] column = { MediaStore.Images.Media.DATA };
+        String[] column = {MediaStore.Images.Media.DATA};
 
         // where id is equal to
         String sel = MediaStore.Images.Media._ID + "=?";
-
         Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, sel, new String[]{ id }, null);
-
+                column, sel, new String[]{id}, null);
         int columnIndex = cursor.getColumnIndex(column[0]);
 
         if (cursor.moveToFirst()) {
@@ -67,12 +64,12 @@ public class PathUtil {
         Cursor cursor = null;
         try {
             Uri newUri = handleImageUri(uri);
-            String[] proj = { MediaStore.Video.Media.DATA };
-            cursor = context.getContentResolver().query(uri,  proj, null, null, null);
+            String[] proj = {MediaStore.Video.Media.DATA};
+            cursor = context.getContentResolver().query(uri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
-        } catch (Exception e){
+        } catch (Exception e) {
             return null;
         } finally {
             if (cursor != null) {

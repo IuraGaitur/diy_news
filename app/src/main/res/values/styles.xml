@@ -57,13 +57,19 @@
         <item name="android:textSize">20sp</item>s
     </style>
 
-    <style name="edit_questions">
+    <style name="edit_layout_questions">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/img_rounded</item>
+    </style>
+
+    <style name="edit_questions">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:ems">10</item>
         <item name="android:inputType">textMultiLine</item>
         <item name="android:padding">10dp</item>
+        <item name="android:drawable">@android:color/transparent</item>
         <item name="android:textSize">16sp</item>
     </style>
 

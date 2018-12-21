@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import butterknife.BindView;
 import com.facebook.appevents.AppEventsLogger;
 
 import java.lang.reflect.Array;
@@ -27,8 +29,8 @@ import java.util.Calendar;
 import java.util.List;
 
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
 import video.paxra.com.videoconverter.R;
@@ -38,7 +40,9 @@ import video.paxra.com.videoconverter.activities.MainActivity;
 import video.paxra.com.videoconverter.activities.MenuActivity;
 import video.paxra.com.videoconverter.activities.TextTimelineActivity;
 import video.paxra.com.videoconverter.models.Answer;
+import video.paxra.com.videoconverter.models.VideoInfoPersistor;
 import video.paxra.com.videoconverter.utils.FFMpegUtils;
+import video.paxra.com.videoconverter.utils.FirebaseUtil;
 import video.paxra.com.videoconverter.utils.StringUtils;
 
 /**
@@ -64,13 +68,30 @@ public class QuestionsFragment extends Fragment {
     @BindView(R.id.editText6)
     EditText mAnswer6EditView;
 
+    @BindView(R.id.editTextLayout)
+    TextInputLayout mAnswerLayout1EditView;
+
+    @BindView(R.id.editTextLayout2)
+    TextInputLayout mAnswerLayout2EditView;
+
+    @BindView(R.id.editTextLayout3)
+    TextInputLayout mAnswerLayout3EditView;
+
+    @BindView(R.id.editTextLayout4)
+    TextInputLayout mAnswerLayout4EditView;
+
+    @BindView(R.id.editTextLayout5)
+    TextInputLayout mAnswerLayout5EditView;
+
+    @BindView(R.id.editTextLayout6)
+    TextInputLayout mAnswerLayout6EditView;
+
     @BindView(R.id.btn_generate)
     Button mGenerateBtnView;
-
     @BindView(R.id.main_parent)
     LinearLayout mLlvMainLView;
-
     String mErrorMustComplete;
+
 
     public final static String TAG_ANSWERS = "answers";
     public static final String TAG_FILE = "file";
@@ -127,6 +148,7 @@ public class QuestionsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_questions, null);
         ButterKnife.bind(this, view);
         logger.logEvent("CONVERT_VIDEO_STARTED");
+        FirebaseUtil.logAnswer(getActivity());
         return view;
     }
 
@@ -167,34 +189,29 @@ public class QuestionsFragment extends Fragment {
 
     public ArrayList<Answer> getAnswers(int videoLength) {
         List<Answer> answers = new ArrayList<>();
-        int totalLength = 0;
+
 
         if (mAnswer1EditView.getText().toString() != null && mAnswer1EditView.getText().toString() != "") {
             answers.add(new Answer(1, mAnswer1EditView.getText().toString(), "header"));
-            totalLength += mAnswer1EditView.getText().toString().length();
         }
         if (mAnswer2EditView.getText().toString() != null && mAnswer2EditView.getText().toString() != "") {
             answers.add(new Answer(2, mAnswer2EditView.getText().toString(), "header"));
-            totalLength += mAnswer2EditView.getText().toString().length();
         }
         if (mAnswer3EditView.getText().toString() != null && mAnswer3EditView.getText().toString() != "") {
+            VideoInfoPersistor.title = mAnswer3EditView.getText().toString().toUpperCase();
             answers.add(new Answer(3, mAnswer3EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer3EditView.getText().toString().length();
         }
         if (mAnswer4EditView.getText().toString() != null && mAnswer4EditView.getText().toString() != "") {
             answers.add(new Answer(4, mAnswer4EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer4EditView.getText().toString().length();
         }
         if (mAnswer5EditView.getText().toString() != null && mAnswer5EditView.getText().toString() != "") {
             answers.add(new Answer(5, mAnswer5EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer5EditView.getText().toString().length();
         }
         if (mAnswer6EditView.getText().toString() != null && mAnswer6EditView.getText().toString() != "") {
             answers.add(new Answer(6, mAnswer6EditView.getText().toString().toUpperCase(), "text"));
-            totalLength += mAnswer6EditView.getText().toString().length();
         }
 
-        answers = FFMpegUtils.calculateTimeShowForText((ArrayList) answers, videoLength);
+        answers = FFMpegUtils.calculateSmartTimeShowForText((ArrayList) answers, videoLength);
 
         return (ArrayList<Answer>) answers;
     }
@@ -205,16 +222,19 @@ public class QuestionsFragment extends Fragment {
         if (mAnswer1EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer1EditView);
             mAnswer1EditView.requestFocus();
+            mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
             return false;
         }
         if (mAnswer2EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer2EditView);
             mAnswer2EditView.requestFocus();
+            mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
             return false;
         }
         if (mAnswer3EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer3EditView);
             mAnswer3EditView.requestFocus();
+            mAnswerLayout3EditView.getParent().requestChildFocus(mAnswerLayout3EditView,mAnswerLayout3EditView);
             return false;
         }
         return true;
@@ -227,22 +247,47 @@ public class QuestionsFragment extends Fragment {
                 selectDate();
             }
         });
-        mAnswer2EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mAnswer1EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (mAnswer1EditView.getText().toString().trim().length() < 2) {
-                        mAnswer1EditView.setError(mErrorMustComplete);
+                        mAnswerLayout1EditView.setError(mErrorMustComplete);
+                        mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
                     } else {
                         // your code here
-                        mAnswer2EditView.setError(null);
+                        mAnswerLayout1EditView.setError(null);
+                    }
+                } else {
+                    if (mAnswer1EditView.getText().toString().trim().length() < 2) {
+                        mAnswerLayout1EditView.setError(mErrorMustComplete);
+                        mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
+                    } else {
+                        // your code here
+                        mAnswerLayout1EditView.setError(null);
+                    }
+                }
+
+            }
+        });
+        mAnswer2EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (mAnswer2EditView.getText().toString().trim().length() < 2) {
+                        mAnswerLayout2EditView.setError(mErrorMustComplete);
+                        mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
+                    } else {
+                        // your code here
+                        mAnswerLayout2EditView.setError(null);
                     }
                 } else {
                     if (mAnswer2EditView.getText().toString().trim().length() < 2) {
-                        mAnswer2EditView.setError(mErrorMustComplete);
+                        mAnswerLayout2EditView.setError(mErrorMustComplete);
+                        mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
                     } else {
                         // your code here
-                        mAnswer2EditView.setError(null);
+                        mAnswerLayout2EditView.setError(null);
                     }
                 }
 
@@ -253,17 +298,19 @@ public class QuestionsFragment extends Fragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (mAnswer3EditView.getText().toString().trim().length() < 2) {
-                        mAnswer3EditView.setError(getString(R.string.must_not_empty));
+                        mAnswerLayout3EditView.setError(getString(R.string.must_not_empty));
+                        mAnswerLayout3EditView.getParent().requestChildFocus(mAnswerLayout3EditView,mAnswerLayout3EditView);
                     } else {
                         // your code here
-                        mAnswer3EditView.setError(null);
+                        mAnswerLayout3EditView.setError(null);
                     }
                 } else {
                     if (mAnswer3EditView.getText().toString().trim().length() < 2) {
-                        mAnswer3EditView.setError(mErrorMustComplete);
+                        mAnswerLayout3EditView.setError(mErrorMustComplete);
+                        mAnswerLayout3EditView.getParent().requestChildFocus(mAnswerLayout3EditView,mAnswerLayout3EditView);
                     } else {
                         // your code here
-                        mAnswer3EditView.setError(null);
+                        mAnswerLayout3EditView.setError(null);
                     }
                 }
 
