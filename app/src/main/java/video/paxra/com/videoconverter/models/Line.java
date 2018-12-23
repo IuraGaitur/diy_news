@@ -1,7 +1,5 @@
 package video.paxra.com.videoconverter.models;
 
-
-
 public class Line {
   public int position;
   public int height;

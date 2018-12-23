@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.utils.AndroidUtilities;
 import video.paxra.com.videoconverter.utils.FirebaseUtil;
+import video.paxra.com.videoconverter.utils.SharedPref;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -31,7 +32,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashScreenActivity.this, MenuActivity.class));
+                boolean userSeenTutorial = new SharedPref(SplashScreenActivity.this).hasUserSeenTutorial();
+                if (!userSeenTutorial) {
+                    startActivity(new Intent(SplashScreenActivity.this, TutorialActivity.class));
+                }else {
+                    startActivity(new Intent(SplashScreenActivity.this, MenuActivity.class));
+                }
                 finish();
             }
         }, 2000);

@@ -35,4 +35,11 @@
     <string name="cancel">Отмена</string>
     <string name="check_upload">Я согласен на то, чтобы данное видео появилось на канале YouTube DIY News.</string>
     <string name="not_enough_length">Длина видео должна быть больше 15 секунд.</string>
+
+    <!--Tutorial texts -->
+    <string name="tutorial_1">ДЕЛАЙ ВИДЕО</string>
+    <string name="tutorial_2">ОТВЕТИТЬ НА ВОПРОСЫ</string>
+    <string name="tutorial_3">РЕДАКТИРУЙ</string>
+    <string name="tutorial_4">ОТПРАВЬ</string>
+
 </resources>

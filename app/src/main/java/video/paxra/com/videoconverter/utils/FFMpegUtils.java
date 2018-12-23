@@ -18,9 +18,7 @@ import java.util.regex.Pattern;
 import video.paxra.com.videoconverter.interfaces.Convertable;
 import video.paxra.com.videoconverter.models.Answer;
 
-/**
- * Created by iura on 9/30/16.
- */
+
 public class FFMpegUtils {
 
     public static void convertVideo(Context context, final Convertable resolver, String[] text) {

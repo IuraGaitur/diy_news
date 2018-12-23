@@ -9,4 +9,7 @@
     <dimen name="icon_small_large">25dp</dimen>
     <dimen name="text_size_extrabig">24sp</dimen>
     <dimen name="logo_size">200dp</dimen>
+    <dimen name="text_size_big">20sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="space_4">4dp</dimen>
 </resources>

@@ -11,9 +11,6 @@ import java.io.InputStream;
 
 import video.paxra.com.videoconverter.utils.YoutubeApi;
 
-/**
- * Created by iuriegaitur on 9/19/17.
- */
 
 public class YoutubeService extends IntentService {
 

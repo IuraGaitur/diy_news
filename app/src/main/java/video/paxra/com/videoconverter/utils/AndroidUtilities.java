@@ -10,9 +10,7 @@ import android.view.WindowManager;
 import java.util.List;
 import video.paxra.com.videoconverter.models.Line;
 
-/**
- * Created by iuriegaitur on 10/29/16.
- */
+
 public class AndroidUtilities {
 
   static float density;

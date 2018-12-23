@@ -22,9 +22,6 @@ import video.paxra.com.videoconverter.activities.MenuActivity;
 import video.paxra.com.videoconverter.views.VideoPlayer;
 import video.paxra.com.videoconverter.views.VideoPlayerStandart;
 
-/**
- * Created by root on 10/14/15.
- */
 public class VideoFragment extends Fragment {
 
     @BindView(R.id.videoview) VideoPlayerStandart mVideoView;

@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-/**
- * Created by iuriegaitur on 4/18/17.
- */
 
 public class ConvertService extends Service {
 

@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by crove on 09.10.2016.
- */
 
 public class Answer implements Serializable {
 

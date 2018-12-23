@@ -7,27 +7,21 @@ import android.widget.TextView;
 
 import video.paxra.com.videoconverter.utils.FontCache;
 
-/**
- * Created by crove on 09.10.2016.
- */
 
-public class FontTextViewRegular extends TextView {
+public class FontTextViewRegular extends android.support.v7.widget.AppCompatTextView {
 
     public FontTextViewRegular(Context context) {
         super(context);
-
         applyCustomFont(context);
     }
 
     public FontTextViewRegular(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         applyCustomFont(context);
     }
 
     public FontTextViewRegular(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         applyCustomFont(context);
     }
 

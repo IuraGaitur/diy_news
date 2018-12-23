@@ -35,4 +35,10 @@
     <string name="cancel">Cancel</string>
     <string name="check_upload">I agree that this video will appear on the Youtube DIY News channel.</string>
     <string name="not_enough_length">The video length should be more than 15 seconds</string>
+
+    <!--Tutorial texts -->
+    <string name="tutorial_1">RECORD</string>
+    <string name="tutorial_2">ANSWER QUESTIONS</string>
+    <string name="tutorial_3">EDIT</string>
+    <string name="tutorial_4">SHARE</string>
 </resources>

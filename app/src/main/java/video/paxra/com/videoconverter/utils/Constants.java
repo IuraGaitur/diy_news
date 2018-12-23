@@ -1,8 +1,5 @@
 package video.paxra.com.videoconverter.utils;
 
-/**
- * Created by iuriegaitur on 12/4/17.
- */
 
 public class Constants {
 
@@ -17,6 +14,4 @@ public class Constants {
     public static final String FONT_NAME = "/font_simple.ttf";
 
     public static final String ICON_NAME = "/icon_trans.png";
-
-
 }

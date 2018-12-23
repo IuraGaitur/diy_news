@@ -6,9 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by iuriegaitur on 11/26/16.
- */
 
 public class StringUtils {
 

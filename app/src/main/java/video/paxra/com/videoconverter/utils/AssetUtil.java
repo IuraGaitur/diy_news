@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Created by iura on 7/3/16.
- */
+
 public class AssetUtil {
   public static void copyAssets(Context context) {
     AssetManager assetManager = context.getAssets();

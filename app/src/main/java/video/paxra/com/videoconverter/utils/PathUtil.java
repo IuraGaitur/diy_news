@@ -11,9 +11,7 @@ import android.provider.MediaStore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by iura on 7/3/16.
- */
+
 public class PathUtil {
 
     public static String getPathFromFile(String fileName) {

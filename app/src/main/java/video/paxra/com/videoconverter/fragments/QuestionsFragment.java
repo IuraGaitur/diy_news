@@ -45,9 +45,7 @@ import video.paxra.com.videoconverter.utils.FFMpegUtils;
 import video.paxra.com.videoconverter.utils.FirebaseUtil;
 import video.paxra.com.videoconverter.utils.StringUtils;
 
-/**
- * Created by iura on 10/3/16.
- */
+
 public class QuestionsFragment extends Fragment {
 
     @BindView(R.id.editText)

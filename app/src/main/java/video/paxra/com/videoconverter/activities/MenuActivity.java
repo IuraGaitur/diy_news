@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -29,8 +30,8 @@ public class MenuActivity extends AppCompatActivity {
   private String fileOutPath = "";
   AppEventsLogger logger;
 
-  @BindView(R.id.action_import) ImageView mIvImport;
-  @BindView(R.id.action_record) ImageView mIvRecord;
+  @BindView(R.id.action_import) ImageButton mIvImport;
+  @BindView(R.id.action_record) ImageButton mIvRecord;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,9 +46,9 @@ public class MenuActivity extends AppCompatActivity {
     logger = AppEventsLogger.newLogger(this);
   }
 
-  @OnClick(R.id.action_import) public void actionImportClick(View view) {
-    Intent intent = new Intent(Intent.ACTION_PICK,
-        android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+  @OnClick(R.id.action_import)
+  public void actionImportClick(View view) {
+    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
     logger.logEvent("IMPORT_VIDEO_SELECTED");
     FirebaseUtil.logSelect(this);
     try {
@@ -58,7 +59,8 @@ public class MenuActivity extends AppCompatActivity {
     }
   }
 
-  @OnClick(R.id.action_record) public void actionRecordClick(View view) {
+  @OnClick(R.id.action_record)
+  public void actionRecordClick(View view) {
     Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
     if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
       logger.logEvent("RECORD_VIDEO_SELECTED");
@@ -68,6 +70,8 @@ public class MenuActivity extends AppCompatActivity {
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (data == null) return;
+
     Uri videoUri = data.getData();
     filePath = PathUtil.getRealPathFromURI(this, videoUri);
     if (resultCode == RESULT_OK && requestCode == REQUEST_VIDEO_CAPTURE) {

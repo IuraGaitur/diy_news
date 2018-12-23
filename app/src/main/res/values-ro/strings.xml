@@ -35,4 +35,10 @@
     <string name="cancel">Anulează</string>
     <string name="check_upload">Sunt de acord ca acest fișier video să apară pe canalul de Youtube DIY News.</string>
     <string name="not_enough_length">Durata videoului trebuie să fie mai mare ca 15 seconde</string>
+
+    <!--Tutorial texts -->
+    <string name="tutorial_1">FILMEAZĂ</string>
+    <string name="tutorial_2">RĂSPUNDE LA ÎNTREBĂRI</string>
+    <string name="tutorial_3">EDITEAZĂ</string>
+    <string name="tutorial_4">DISTRIBUE</string>
 </resources>
