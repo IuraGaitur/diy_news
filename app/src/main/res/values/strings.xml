@@ -41,7 +41,11 @@
     <string name="tutorial_2">ANSWER QUESTIONS</string>
     <string name="tutorial_3">EDIT</string>
     <string name="tutorial_4">SHARE</string>
-  <string name="choose_font">Choose font</string>
-  <string name="choose_color">Choose color</string>
+    <string name="choose_font">Choose font</string>
+    <string name="choose_color">Choose color</string>
+    <string name="buy_message_1">You can get full access</string>
+    <string name="buy_message_2">to editing only by</string>
+    <string name="buy_message_3"> <b> 5.99$</b></string>
+    <string name="buy_text">Buy</string>
 
 </resources>

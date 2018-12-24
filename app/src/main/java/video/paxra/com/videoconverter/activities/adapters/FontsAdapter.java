@@ -36,8 +36,10 @@ public class FontsAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     String rowItem = getItem(position);
     View rowview = flater.inflate(R.layout.item_font,null,true);
-    ((TextView) rowview.findViewById(R.id.intial)).setText("As");
+    ((TextView) rowview.findViewById(R.id.initial)).setText("As");
     ((TextView) rowview.findViewById(R.id.title)).setText(rowItem);
+
+    //((TextView) rowview.findViewById(R.id.initial)).setTypeface();
     return rowview;
   }
 }

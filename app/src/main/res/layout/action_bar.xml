@@ -11,6 +11,8 @@
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:clickable="true"
+        android:background="?attr/actionBarItemBackground"
         android:src="@drawable/img_arrow" />
 
     <TextView
