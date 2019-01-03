@@ -267,7 +267,8 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     if(answers.isEmpty()) return;
 
     textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Constants.TEXT_FONT_SIZE);
-    textView.setText(answers.get(counter).answer.replace("^*", " "));
+    String text = answers.get(counter).answer.replaceAll("^*", " ").toUpperCase();
+    textView.setText(text);
 
     textView.post(new Runnable() {
       @Override public void run() {

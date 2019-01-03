@@ -92,7 +92,7 @@ public class FfmpegCommandBuilder2 {
         mCommand += buildOutputAndSettings();
 
         for (String val : mCommand.split(" ")) {
-            val = val.replace("^*", " ");
+            val = val.replaceAll("^*", " ");
             mCommands.add(val);
         }
         return mCommands.toArray(new String[0]);
