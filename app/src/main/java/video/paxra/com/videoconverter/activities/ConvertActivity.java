@@ -28,14 +28,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.bravobit.ffmpeg.FFmpeg;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.interfaces.Convertable;
@@ -104,10 +102,13 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   private void initializeConvertion() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
+    boolean hasWritePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        == PackageManager.PERMISSION_GRANTED;
+    boolean hasReadPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        == PackageManager.PERMISSION_GRANTED;
+    if (!hasReadPermission || !hasWritePermission) {
       ActivityCompat.requestPermissions(this,
-          new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+          new String[] { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE },
           MY_PERMISSIONS_REQUEST_WRITE_FILES);
     } else {
       AssetUtil.copyAssets(this);
@@ -195,26 +196,10 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   public void initializeConvertingLibrary(Context context) {
-    try {
-      FFmpeg.getInstance(context).loadBinary(new FFmpegLoadBinaryResponseHandler() {
-        @Override public void onFailure() {
-          Log.d("Init FFMPEG", "Failed");
-        }
-
-        @Override public void onSuccess() {
-          Log.d("Init FFMPEG", "Success");
-        }
-
-        @Override public void onStart() {
-        }
-
-        @Override public void onFinish() {
-          initializeConvertingVideo(answers, fileName);
-        }
-      });
-    } catch (FFmpegNotSupportedException e) {
-      Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG);
-      e.printStackTrace();
+    if (!FFmpeg.getInstance(context).isSupported()) {
+      Toast.makeText(this, "FFMPEG is not supported", Toast.LENGTH_LONG).show();
+    } else {
+      initializeConvertingVideo(answers, fileName);
     }
   }
 
@@ -236,9 +221,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         .setCropTo(mEndVideoPos);
 
     commands = commandBuilder.build();
-
     getInfoAboutVideo(this, fileName);
-
   }
 
   public void getInfoAboutVideo(Context context, final String fileName) {
@@ -270,9 +253,9 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
   private void initTextViewComponent() {
     textView = (TextView) findViewById(R.id.text);
-    textView.setVisibility(View.INVISIBLE);
+    int width = mVideoWidth > mVideoHeight ? Constants.VIDEO_WIDTH : Constants.VIDEO_HEIGHT;
     textView.setLayoutParams(
-        new RelativeLayout.LayoutParams(Constants.VIDEO_WIDTH - Constants.MARGIN_PADDING,
+        new RelativeLayout.LayoutParams(width - Constants.MARGIN_PADDING,
             RelativeLayout.LayoutParams.WRAP_CONTENT));
   }
 
@@ -281,9 +264,10 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   private void postItem(final List<Answer> answers, final int counter) {
+    if(answers.isEmpty()) return;
 
     textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Constants.TEXT_FONT_SIZE);
-    textView.setText(answers.get(counter).answer);
+    textView.setText(answers.get(counter).answer.replace("^*", " "));
 
     textView.post(new Runnable() {
       @Override public void run() {
@@ -311,5 +295,4 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
       }
     });
   }
-
 }

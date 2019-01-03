@@ -18,7 +18,7 @@ public class SharedPref {
 
   public void setUserSeenTutorial() {
     SharedPreferences sharedPref = context.getSharedPreferences("APP", Context.MODE_PRIVATE);
-    sharedPref.edit().putBoolean("seen_tutorial", true);
+    sharedPref.edit().putBoolean("seen_tutorial", true).apply();
     return;
   }
 

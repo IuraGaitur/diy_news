@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 
 import butterknife.BindView;
@@ -24,6 +25,7 @@ import video.paxra.com.videoconverter.fragments.VideoFragment;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.back_btn) ImageView mBackImageView;
+    @BindView(R.id.text_edit) TextView editText;
     private VideoFragment mVideoFragment;
     private QuestionsFragment mQuestionFragment;
 
@@ -72,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     @Optional @OnClick(R.id.back_btn)
     public void backBtnClick(View view) {
         onBackPressed();
+    }
+
+    @Optional @OnClick(R.id.text_edit)
+    public void editFonts() {
+        startActivity(new Intent(this, EditFontActivity.class));
     }
 
     public String getFilePath() {
