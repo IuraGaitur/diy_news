@@ -267,7 +267,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     if(answers.isEmpty()) return;
 
     textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Constants.TEXT_FONT_SIZE);
-    String text = answers.get(counter).answer.replaceAll("^*", " ").toUpperCase();
+    String text = answers.get(counter).answer.replaceAll("_%", " ");
     textView.setText(text);
 
     textView.post(new Runnable() {
@@ -282,7 +282,9 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
           int endPos = textView.getLayout().getLineEnd(i);
           Rect rect = new Rect();
           textView.getLayout().getLineBounds(i, rect);
-          String text = answers.get(counter).getAnswer().substring(startPos, endPos);
+          String text = answers.get(counter).getAnswer()
+              .replaceAll("_%", " ").toUpperCase()
+              .substring(startPos, endPos).replaceAll(" ", "_%");
           int calcHeight = rect.height();
           data.add(new Line(i, calcHeight, text));
         }

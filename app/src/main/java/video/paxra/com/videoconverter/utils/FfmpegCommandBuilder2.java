@@ -92,7 +92,7 @@ public class FfmpegCommandBuilder2 {
         mCommand += buildOutputAndSettings();
 
         for (String val : mCommand.split(" ")) {
-            val = val.replaceAll("^*", " ");
+            val = val.replaceAll("_%", " ");
             mCommands.add(val);
         }
         return mCommands.toArray(new String[0]);
@@ -198,5 +198,4 @@ public class FfmpegCommandBuilder2 {
     private String buildOutputAndSettings() {
         return " -codec:v libx264 -preset ultrafast -r 24 " + mOutputFile;
     }
-
 }
