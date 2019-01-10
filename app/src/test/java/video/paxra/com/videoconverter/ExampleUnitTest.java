@@ -1,7 +1,5 @@
 package video.paxra.com.videoconverter;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -18,7 +16,7 @@ public class ExampleUnitTest extends TestCase{
         super.setUp();
     }
 
-    @SmallTest
+    @Test
     public void test_addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }

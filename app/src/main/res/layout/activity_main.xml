@@ -28,6 +28,18 @@
             android:text="@string/create"
             android:textColor="@color/primaryYellow"
             android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/text_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Edit"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
     </RelativeLayout>
 
     <ScrollView

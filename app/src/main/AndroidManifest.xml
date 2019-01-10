@@ -23,7 +23,7 @@
 
 
         <activity
-            android:name=".activities.EditFontActivity"
+            android:name=".activities.TestPayActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,8 +32,9 @@
             </intent-filter>
 
         </activity>
+
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.SplashScreenActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
@@ -65,7 +66,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
-        <activity android:name=".activities.SplashScreenActivity"
+        <activity android:name=".activities.EditFontActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
@@ -88,6 +89,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fcee939e1fecdf2d7f258e279c0e889796c19c6f" />
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
 
 

@@ -2,6 +2,7 @@ package video.paxra.com.videoconverter.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +50,17 @@ public class MenuActivity extends AppCompatActivity {
   @OnClick(R.id.action_import)
   public void actionImportClick(View view) {
     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+
+    //if (Build.VERSION.SDK_INT < 19) {
+    //  Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+    //  photoPickerIntent.setType("video/*");
+    //  startActivityForResult(photoPickerIntent,REQUEST_FILE_PICKER);
+    //} else {
+    //  Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+    //  photoPickerIntent.setType("video/*");
+    //  startActivityForResult(photoPickerIntent, REQUEST_FILE_PICKER);
+    //}
+
     logger.logEvent("IMPORT_VIDEO_SELECTED");
     FirebaseUtil.logSelect(this);
     try {
@@ -85,6 +97,9 @@ public class MenuActivity extends AppCompatActivity {
       startActivity(intent);
     } else if (resultCode == RESULT_OK && requestCode == REQUEST_FILE_PICKER) {
       Intent intent = new Intent(MenuActivity.this, CropActivity.class);
+      if (filePath == null) {
+        filePath = videoUri.getPath().toString();
+      }
       intent.putExtra(TAG_FILE_URI, filePath);
       startActivity(intent);
     }

@@ -113,19 +113,7 @@ public class CommandsFFMpegUtilTest extends TestCase {
         Assert.assertEquals("Y Positions are equals", expectedResult, actualResult);
     }
 
-    @Test
-    public void testConvertCelsiusToFahrenheit() {
-        float actual = 100;
-        // expected value is 100
-        float expected = 100;
-        // use this method because float is not precise
-        assertEquals("Conversion from celsius to fahrenheit failed", expected,
-                actual, 0.001);
-    }
-
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-
-
 }

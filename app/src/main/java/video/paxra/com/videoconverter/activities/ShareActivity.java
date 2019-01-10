@@ -65,7 +65,7 @@ public class ShareActivity extends AppCompatActivity {
 
     private void setVideoUrl(String videoUrl) {
         Log.d("Video url", videoUrl);
-        if(videoUrl != null && mVideoView != null) {
+        if(videoUrl != null && mVideoView != null && !videoUrl.equals("file://")) {
             mVideoView.setUp(videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
         }
     }

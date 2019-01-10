@@ -3,9 +3,7 @@ package video.paxra.com.videoconverter.utils;
 import android.content.Context;
 import android.util.Log;
 
-import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +13,8 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
+import nl.bravobit.ffmpeg.FFmpeg;
 import video.paxra.com.videoconverter.interfaces.Convertable;
 import video.paxra.com.videoconverter.models.Answer;
 
@@ -42,7 +42,7 @@ public class FFMpegUtils {
                 @Override
                 public void onFinish() {resolver.onFinishConvert();}
             });
-        } catch (FFmpegCommandAlreadyRunningException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -107,7 +107,7 @@ public class FFMpegUtils {
                     resolver.onFinishConvert();
                 }
             });
-        } catch (FFmpegCommandAlreadyRunningException e) {
+        } catch (Exception e) {
 
         }
     }

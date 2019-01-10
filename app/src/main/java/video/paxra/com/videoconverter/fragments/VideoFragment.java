@@ -72,7 +72,6 @@ public class VideoFragment extends Fragment {
         this.mVideoHeight = getArguments().getInt(CropActivity.TAG_HEIGHT);
         this.mVideoStartPos = getArguments().getInt(CropActivity.TAG_START_POS);
         this.mVideoEndPos = getArguments().getInt(CropActivity.TAG_END_POS);
-
         Log.d("File", videoUrl);
     }
 
@@ -86,7 +85,7 @@ public class VideoFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+        if(videoUrl == null || videoUrl.equals("file://")) return;
         Log.d("Start and end", "" + mVideoStartPos + ":" + mVideoEndPos);
         ((VideoPlayer)mVideoView).startCutVideoTime = mVideoStartPos * 1000;
         ((VideoPlayer)mVideoView).endCutVideoTime = mVideoEndPos * 1000;
@@ -98,20 +97,16 @@ public class VideoFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("VideoFragment", "Pause and destroy");
+        if(videoUrl == null || videoUrl.equals("file://")) return;
         mVideoView.release();
         VideoPlayer.releaseAllVideos();
     }
-
-
 
     public void setVideoUri(String uri) {
         this.videoUrl = uri;
     }
 
-
-    public void setOnConfigurationChanged() {
-
-    }
+    public void setOnConfigurationChanged() {}
 
     @Override
     public void onDestroy() {

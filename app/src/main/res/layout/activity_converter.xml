@@ -16,10 +16,16 @@
 
     <video.paxra.com.videoconverter.views.FontTextViewGood
         android:id="@+id/text"
-        android:layout_width="140dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Aici la noi este SARATEANUL capatat caracoroci de lucru bla bla caci asta "
-        android:visibility="invisible"
+        android:visibility="visible"
+        android:ellipsize="none"
+        android:layout_weight="1"
+        android:maxLines="5"
+        app:autoSizeTextType="none"
+        android:breakStrategy="simple"
+        android:scrollHorizontally="false"
         android:textColor="@color/green"
         />
 
@@ -43,8 +49,7 @@
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="3"
-      >
+      android:layout_weight="3">
 
     <Button
         android:id="@+id/btn_cancel"
@@ -58,9 +63,6 @@
         android:textColor="@color/black_gray"
         android:textSize="22sp"
         />
-
-
-
   </RelativeLayout>
 
 </LinearLayout>

@@ -27,7 +27,7 @@ public class Answer implements Serializable {
 
   public Answer(int id, String answer, String type) {
     this.id = id;
-    this.answer = answer.replace(" ", "^*");
+    this.answer = answer.replaceAll(" ", "_%");
     this.type = type;
   }
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,14 +29,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.appevents.AppEventsLogger;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nl.bravobit.ffmpeg.FFmpeg;
 import video.paxra.com.videoconverter.R;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.interfaces.Convertable;
@@ -46,8 +45,12 @@ import video.paxra.com.videoconverter.utils.Constants;
 import video.paxra.com.videoconverter.utils.FFMpegUtils;
 import video.paxra.com.videoconverter.utils.FfmpegCommandBuilder2;
 import video.paxra.com.videoconverter.utils.FirebaseUtil;
+import video.paxra.com.videoconverter.utils.FontCache;
 import video.paxra.com.videoconverter.utils.StringUtils;
 import video.paxra.com.videoconverter.views.RingProgressBar;
+
+import static video.paxra.com.videoconverter.activities.EditFontActivity.EXTRA_COLOR;
+import static video.paxra.com.videoconverter.activities.EditFontActivity.EXTRA_FONT;
 
 public class ConvertActivity extends AppCompatActivity implements Convertable {
 
@@ -66,6 +69,8 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   private int mVideoWidth = 0;
   private int mVideoHeight = 0;
   private double mTotalFPS = 0;
+  private String font = "";
+  private String color = "";
   List<Answer> answers = new ArrayList<>();
   AppEventsLogger logger;
 
@@ -84,7 +89,6 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
     parseExtras();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     logScreen();
-
     initTextViewComponent();
     formatedAnswers(answers);
   }
@@ -92,6 +96,8 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   private void parseExtras() {
     answers = (List<Answer>) getIntent().getSerializableExtra(QuestionsFragment.TAG_ANSWERS);
     fileName = getIntent().getStringExtra(QuestionsFragment.TAG_FILE);
+    font = getIntent().getStringExtra(EXTRA_FONT);
+    color = getIntent().getStringExtra(EXTRA_COLOR);
     mStartVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_START_POS, 0);
     mEndVideoPos = getIntent().getExtras().getInt(CropActivity.TAG_END_POS, 0);
     mVideoWidth = getIntent().getExtras().getInt(CropActivity.TAG_WIDTH, 0);
@@ -104,10 +110,13 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   private void initializeConvertion() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
+    boolean hasWritePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        == PackageManager.PERMISSION_GRANTED;
+    boolean hasReadPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        == PackageManager.PERMISSION_GRANTED;
+    if (!hasReadPermission || !hasWritePermission) {
       ActivityCompat.requestPermissions(this,
-          new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+          new String[] { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE },
           MY_PERMISSIONS_REQUEST_WRITE_FILES);
     } else {
       AssetUtil.copyAssets(this);
@@ -195,32 +204,16 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   public void initializeConvertingLibrary(Context context) {
-    try {
-      FFmpeg.getInstance(context).loadBinary(new FFmpegLoadBinaryResponseHandler() {
-        @Override public void onFailure() {
-          Log.d("Init FFMPEG", "Failed");
-        }
-
-        @Override public void onSuccess() {
-          Log.d("Init FFMPEG", "Success");
-        }
-
-        @Override public void onStart() {
-        }
-
-        @Override public void onFinish() {
-          initializeConvertingVideo(answers, fileName);
-        }
-      });
-    } catch (FFmpegNotSupportedException e) {
-      Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG);
-      e.printStackTrace();
+    if (!FFmpeg.getInstance(context).isSupported()) {
+      Toast.makeText(this, "FFMPEG is not supported", Toast.LENGTH_LONG).show();
+    } else {
+      initializeConvertingVideo(answers, fileName, font, color);
     }
   }
 
-  public void initializeConvertingVideo(List<Answer> answers, String fileName) {
+  public void initializeConvertingVideo(List<Answer> answers, String fileName, String font, String color) {
     String image = getExternalFilesDir(null) + Constants.ICON_NAME;
-    String fontFile = this.getExternalFilesDir(null) + Constants.FONT_NAME;
+    String fontFile = this.getExternalFilesDir(null) + "/" + font;
     outputFileName = StringUtils.generateRandomFromName(fileName);
 
     //Build commands for converting video
@@ -228,6 +221,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         .setInput(fileName)
         .setOutput(outputFileName)
         .setFont(fontFile)
+        .setColor(color)
         .setTexts(answers)
         .setImage(image)
         .setWidth(mVideoWidth)
@@ -236,9 +230,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
         .setCropTo(mEndVideoPos);
 
     commands = commandBuilder.build();
-
     getInfoAboutVideo(this, fileName);
-
   }
 
   public void getInfoAboutVideo(Context context, final String fileName) {
@@ -269,10 +261,12 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   private void initTextViewComponent() {
-    textView = (TextView) findViewById(R.id.text);
-    textView.setVisibility(View.INVISIBLE);
+    textView = findViewById(R.id.text);
+    Typeface customFont = FontCache.getTypeface(font, this);
+    textView.setTypeface(customFont);
+    int width = mVideoWidth > mVideoHeight ? Constants.VIDEO_WIDTH : Constants.VIDEO_HEIGHT;
     textView.setLayoutParams(
-        new RelativeLayout.LayoutParams(Constants.VIDEO_WIDTH - Constants.MARGIN_PADDING,
+        new RelativeLayout.LayoutParams(width - Constants.MARGIN_PADDING,
             RelativeLayout.LayoutParams.WRAP_CONTENT));
   }
 
@@ -281,35 +275,36 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
   }
 
   private void postItem(final List<Answer> answers, final int counter) {
+    if(answers.isEmpty()) return;
 
     textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Constants.TEXT_FONT_SIZE);
-    textView.setText(answers.get(counter).answer);
+    String text = answers.get(counter).answer.replaceAll("_%", " ");
+    textView.setText(text);
 
-    textView.post(new Runnable() {
-      @Override public void run() {
-        int height = textView.getMeasuredHeight();
-        answers.get(counter).height = height;
-        int lineCount = textView.getLineCount();
+    textView.post(() -> {
+      int height = textView.getMeasuredHeight();
+      answers.get(counter).height = height;
+      int lineCount = textView.getLineCount();
 
-        List<Line> data = new ArrayList<Line>();
-        for (int i = 0; i < lineCount; i++) {
-          int startPos = textView.getLayout().getLineStart(i);
-          int endPos = textView.getLayout().getLineEnd(i);
-          Rect rect = new Rect();
-          textView.getLayout().getLineBounds(i, rect);
-          String text = answers.get(counter).getAnswer().substring(startPos, endPos);
-          int calcHeight = rect.height();
-          data.add(new Line(i, calcHeight, text));
-        }
-        answers.get(counter).splittedText = data;
+      List<Line> data = new ArrayList<>();
+      for (int i = 0; i < lineCount; i++) {
+        int startPos = textView.getLayout().getLineStart(i);
+        int endPos = textView.getLayout().getLineEnd(i);
+        Rect rect = new Rect();
+        textView.getLayout().getLineBounds(i, rect);
+        String text1 = answers.get(counter).getAnswer()
+            .replaceAll("_%", " ").toUpperCase()
+            .substring(startPos, endPos).replaceAll(" ", "_%");
+        int calcHeight = rect.height();
+        data.add(new Line(i, calcHeight, text1));
+      }
+      answers.get(counter).splittedText = data;
 
-        if (counter == answers.size() - 1) {
-          initializeConvertion();
-        } else {
-          postItem(answers, counter + 1);
-        }
+      if (counter == answers.size() - 1) {
+        initializeConvertion();
+      } else {
+        postItem(answers, counter + 1);
       }
     });
   }
-
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 
 import butterknife.BindView;
@@ -17,13 +18,18 @@ import butterknife.OnClick;
 import butterknife.Optional;
 import io.fabric.sdk.android.Fabric;
 import video.paxra.com.videoconverter.R;
+import video.paxra.com.videoconverter.fragments.OnConvertCallback;
 import video.paxra.com.videoconverter.fragments.QuestionsFragment;
 import video.paxra.com.videoconverter.fragments.VideoFragment;
+
+import static video.paxra.com.videoconverter.activities.EditFontActivity.EXTRA_COLOR;
+import static video.paxra.com.videoconverter.activities.EditFontActivity.EXTRA_FONT;
 
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.back_btn) ImageView mBackImageView;
+    @BindView(R.id.text_edit) TextView editText;
     private VideoFragment mVideoFragment;
     private QuestionsFragment mQuestionFragment;
 
@@ -36,7 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private int mVideoWidth = 0;
     private int mVideoHeight = 0;
 
+    String font = "font_simple";
+    String color = "yellow";
+
     public static final int REQUEST_TRIM = 400;
+    public static final int REQUEST_CHANGE_FONT = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction().add(R.id.videoFragment, mVideoFragment).commit();
         mQuestionFragment = QuestionsFragment.newInstance(fileUri, mVideoWidth, mVideoHeight, mStartVideoPos, mEndVideoPos);
         getFragmentManager().beginTransaction().add(R.id.questionFragment, mQuestionFragment).commit();
+
+        mQuestionFragment.setConvertCallback(intent -> {
+            intent.putExtra(EXTRA_FONT, font);
+            intent.putExtra(EXTRA_COLOR, color);
+            startActivity(intent);
+        });
     }
 
     public void extractBundleData() {
@@ -66,12 +82,16 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
-
     }
 
     @Optional @OnClick(R.id.back_btn)
     public void backBtnClick(View view) {
         onBackPressed();
+    }
+
+    @Optional @OnClick(R.id.text_edit)
+    public void editFonts() {
+        startActivityForResult(new Intent(this, EditFontActivity.class), REQUEST_CHANGE_FONT);
     }
 
     public String getFilePath() {
@@ -83,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_TRIM) {
             int[] result = data.getIntArrayExtra("data");
             Log.d("Result", result.toString());
+        } else if (requestCode == REQUEST_CHANGE_FONT) {
+            font = data.getExtras().getString(EXTRA_FONT);
+            color = data.getExtras().getString(EXTRA_COLOR);
         }
     }
-
 }

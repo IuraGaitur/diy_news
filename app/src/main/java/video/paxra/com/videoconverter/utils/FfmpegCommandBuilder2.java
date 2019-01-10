@@ -17,6 +17,7 @@ public class FfmpegCommandBuilder2 {
     private String mOutputFile;
     private List<Answer> mTexts;
     private String mFontFile;
+    private String color;
     private String mImagePath;
     private int mOutputWidth;
     private int mOutputHeight;
@@ -82,6 +83,11 @@ public class FfmpegCommandBuilder2 {
         return mInstance;
     }
 
+    public FfmpegCommandBuilder2 setColor(String color) {
+        this.color = color;
+        return mInstance;
+    }
+
     public String[] build() {
         mCommand = "";
         mCommands.clear();
@@ -92,7 +98,7 @@ public class FfmpegCommandBuilder2 {
         mCommand += buildOutputAndSettings();
 
         for (String val : mCommand.split(" ")) {
-            val = val.replace("^*", " ");
+            val = val.replaceAll("_%", " ");
             mCommands.add(val);
         }
         return mCommands.toArray(new String[0]);
@@ -174,7 +180,6 @@ public class FfmpegCommandBuilder2 {
     }
 
     private String buildSplittedLine(Answer currentAnswer, List<Line> lines, Line currentTextLine, int lineNumber, int height) {
-
         String textLine;
         int yPos = AndroidUtilities.getYPosition(height, lines, lineNumber);
         textLine = buildLineOutput(currentAnswer, currentTextLine.text, Constants.TEXT_FONT_SIZE, yPos);
@@ -183,14 +188,12 @@ public class FfmpegCommandBuilder2 {
     }
 
     private String buildLineOutput(Answer currentAnswer, String currentTextLine, int fontSize, int yPos) {
-
         int from = currentAnswer.getFrom();
         int to = currentAnswer.getTo();
         String text = currentTextLine.replace(":", "\\:").replace("'", "'\\\\\\''");
 
-
         return String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                        ":fontcolor=yellow:shadowcolor=black:shadowx=1:shadowy=1:" +
+                        ":fontcolor=" + color + ":shadowcolor=black:shadowx=1:shadowy=1:" +
                         "fontsize=%d:x=(w-tw)/2:y=%d",
                 from, to, mFontFile, text, fontSize, yPos);
     }
@@ -198,5 +201,4 @@ public class FfmpegCommandBuilder2 {
     private String buildOutputAndSettings() {
         return " -codec:v libx264 -preset ultrafast -r 24 " + mOutputFile;
     }
-
 }

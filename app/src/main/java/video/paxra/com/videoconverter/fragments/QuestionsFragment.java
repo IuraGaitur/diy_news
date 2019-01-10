@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.icu.text.RelativeDateTimeFormatter;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -94,6 +95,7 @@ public class QuestionsFragment extends Fragment {
     public final static String TAG_ANSWERS = "answers";
     public static final String TAG_FILE = "file";
     public static final String TAG_QUESTION_NUMBER = "question_number";
+    private OnConvertCallback convertCallback;
     ArrayList<Answer> mUserAnswers = null;
 
     private String videoUrl;
@@ -107,11 +109,10 @@ public class QuestionsFragment extends Fragment {
 
     AppEventsLogger logger;
 
-    public QuestionsFragment() {
-    }
+    public QuestionsFragment() { }
 
-
-    public static QuestionsFragment newInstance(String videoUrl, int videoWidth, int videoHeight, int startPos, int endPos) {
+    public static QuestionsFragment newInstance(String videoUrl, int videoWidth, int videoHeight,
+                                                int startPos, int endPos) {
         QuestionsFragment fragment = new QuestionsFragment();
         Bundle bundle = new Bundle();
         Log.d("File", videoUrl);
@@ -173,16 +174,16 @@ public class QuestionsFragment extends Fragment {
         intent.putExtra(CropActivity.TAG_HEIGHT, mVideoHeight);
         intent.putExtra(CropActivity.TAG_START_POS, mVideoStartPos);
         intent.putExtra(CropActivity.TAG_END_POS, mVideoEndPos);
-        startActivity(intent);
+        convertCallback.onConvert(intent);
     }
 
     public void initDateEdit() {
         Calendar calendar = Calendar.getInstance();
-        String value = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ", "
-                + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1)
+        String value = String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", calendar.get(Calendar.MINUTE)) + ", "
+                + calendar.get(Calendar.DAY_OF_MONTH) + "." + String.format("%02d",(calendar.get(Calendar.MONTH) + 1))
                 + "." + calendar.get(Calendar.YEAR);
-        Log.d("Date", value);
         mAnswer1EditView.setText(value);
+        mAnswer2EditView.requestFocus(mAnswer2EditView.getText().length());
     }
 
     public ArrayList<Answer> getAnswers(int videoLength) {
@@ -216,7 +217,6 @@ public class QuestionsFragment extends Fragment {
 
 
     private boolean validateInputs() {
-
         if (mAnswer1EditView.getText().toString().length() < 2) {
             focusOnView(mAnswer1EditView);
             mAnswer1EditView.requestFocus();
@@ -239,57 +239,44 @@ public class QuestionsFragment extends Fragment {
     }
 
     private void addEditTextFocusListeners() {
-        mAnswer1EditView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectDate();
-            }
-        });
-        mAnswer1EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if (mAnswer1EditView.getText().toString().trim().length() < 2) {
-                        mAnswerLayout1EditView.setError(mErrorMustComplete);
-                        mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
-                    } else {
-                        // your code here
-                        mAnswerLayout1EditView.setError(null);
-                    }
+        mAnswer1EditView.setOnClickListener(view -> selectDate());
+        mAnswer1EditView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                if (mAnswer1EditView.getText().toString().trim().length() < 2) {
+                    mAnswerLayout1EditView.setError(mErrorMustComplete);
+                    mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
                 } else {
-                    if (mAnswer1EditView.getText().toString().trim().length() < 2) {
-                        mAnswerLayout1EditView.setError(mErrorMustComplete);
-                        mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
-                    } else {
-                        // your code here
-                        mAnswerLayout1EditView.setError(null);
-                    }
+                    mAnswerLayout1EditView.setError(null);
                 }
-
-            }
-        });
-        mAnswer2EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if (mAnswer2EditView.getText().toString().trim().length() < 2) {
-                        mAnswerLayout2EditView.setError(mErrorMustComplete);
-                        mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
-                    } else {
-                        // your code here
-                        mAnswerLayout2EditView.setError(null);
-                    }
+            } else {
+                if (mAnswer1EditView.getText().toString().trim().length() < 2) {
+                    mAnswerLayout1EditView.setError(mErrorMustComplete);
+                    mAnswerLayout1EditView.getParent().requestChildFocus(mAnswerLayout1EditView,mAnswerLayout1EditView);
                 } else {
-                    if (mAnswer2EditView.getText().toString().trim().length() < 2) {
-                        mAnswerLayout2EditView.setError(mErrorMustComplete);
-                        mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
-                    } else {
-                        // your code here
-                        mAnswerLayout2EditView.setError(null);
-                    }
+                    mAnswerLayout1EditView.setError(null);
                 }
-
             }
+
+        });
+        mAnswer2EditView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                if (mAnswer2EditView.getText().toString().trim().length() < 2) {
+                    mAnswerLayout2EditView.setError(mErrorMustComplete);
+                    mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
+                } else {
+                    // your code here
+                    mAnswerLayout2EditView.setError(null);
+                }
+            } else {
+                if (mAnswer2EditView.getText().toString().trim().length() < 2) {
+                    mAnswerLayout2EditView.setError(mErrorMustComplete);
+                    mAnswerLayout2EditView.getParent().requestChildFocus(mAnswerLayout2EditView,mAnswerLayout2EditView);
+                } else {
+                    // your code here
+                    mAnswerLayout2EditView.setError(null);
+                }
+            }
+
         });
         mAnswer3EditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -317,12 +304,7 @@ public class QuestionsFragment extends Fragment {
     }
 
     private final void focusOnView(final EditText editText) {
-        mLlvMainLView.post(new Runnable() {
-            @Override
-            public void run() {
-                mLlvMainLView.scrollTo(0, editText.getBottom());
-            }
-        });
+        mLlvMainLView.post(() -> mLlvMainLView.scrollTo(0, editText.getBottom()));
     }
 
     private void selectDate() {
@@ -366,10 +348,10 @@ public class QuestionsFragment extends Fragment {
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
+    }
 
-
-
-
+    public void setConvertCallback(OnConvertCallback convertCallback) {
+        this.convertCallback = convertCallback;
     }
 
     private void setTimeEditText(Calendar calendar) {

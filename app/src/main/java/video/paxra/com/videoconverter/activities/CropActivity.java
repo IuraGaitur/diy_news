@@ -95,7 +95,14 @@ public class CropActivity extends AppCompatActivity {
     }
 
     private void loadVideo(String videoUrl) {
-        mVideoView.setUp("file://" + videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
+
+        try {
+            if(videoUrl == null) throw new Exception();
+
+            mVideoView.setUp("file://" + videoUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_LIST, "");
+        }catch (Exception ex) {
+            Toast.makeText(this, "Cannot load this video", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void disableNextButton() {

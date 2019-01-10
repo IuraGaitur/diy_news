@@ -47,5 +47,6 @@
     <string name="buy_message_2">to editing only by</string>
     <string name="buy_message_3"> <b> 5.99$</b></string>
     <string name="buy_text">Buy</string>
+    <string name="success_buy">Thank you for buying. Now you have access for customized colors and fonts for text</string>
 
 </resources>
