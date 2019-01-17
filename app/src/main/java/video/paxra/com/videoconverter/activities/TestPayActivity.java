@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -30,6 +31,7 @@ public class TestPayActivity extends AppCompatActivity implements PurchasesUpdat
     private View mGooglePayButton;
     private BillingClient billingClient;
     private String[] skuList = {"GOLD_USER"};
+    private List<SkuDetails> skuDetailsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class TestPayActivity extends AppCompatActivity implements PurchasesUpdat
                 @Override
                 public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
                     if (responseCode == BillingClient.BillingResponse.OK) {
+                        TestPayActivity.this.skuDetailsList = skuDetailsList;
                         Log.d("App","querySkuDetailsAsync, responseCode: $responseCode");
                     } else {
                         Log.d("App","Can't querySkuDetailsAsync, responseCode: $responseCode");
@@ -107,6 +110,15 @@ public class TestPayActivity extends AppCompatActivity implements PurchasesUpdat
     }
 
     private void purchaseGoldUser() {
+        SkuDetails details = skuDetailsList.get(0);
+        BillingFlowParams billingFlowParams = BillingFlowParams
+                .newBuilder()
+                .setSkuDetails(details)
+                .build();
+        billingClient.launchBillingFlow(this, billingFlowParams);
+    }
+
+    private void removeGoldUser() {
         String token = billingClient.queryPurchases(BillingClient.SkuType.INAPP).getPurchasesList().get(0).getPurchaseToken();
         billingClient.consumeAsync(token, new ConsumeResponseListener() {
             @Override
