@@ -52,6 +52,7 @@ public class TestPayActivity extends AppCompatActivity implements PurchasesUpdat
             public void onBillingSetupFinished(int responseCode) {
                 if (responseCode == BillingClient.BillingResponse.OK) {
                     Log.d("App", "BILLING | startConnection | RESULT OK");
+                    loadProduct();
                 } else {
                     Log.d("App", "BILLING | startConnection | RESULT: $billingResponseCode");
                 }

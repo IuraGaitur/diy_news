@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_TRIM) {
             int[] result = data.getIntArrayExtra("data");
             Log.d("Result", result.toString());
-        } else if (requestCode == REQUEST_CHANGE_FONT) {
+        } else if (requestCode == REQUEST_CHANGE_FONT && data.getExtras() != null) {
             font = data.getExtras().getString(EXTRA_FONT);
             color = data.getExtras().getString(EXTRA_COLOR);
         }
