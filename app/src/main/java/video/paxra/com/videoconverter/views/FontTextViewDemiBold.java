@@ -32,7 +32,7 @@ public class FontTextViewDemiBold extends TextView {
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = FontCache.getTypeface("AvenirNext-DemiBold.ttf", context);
+        Typeface customFont = FontCache.getTypeface("resources/AvenirNext-DemiBold.ttf", context);
         setTypeface(customFont);
     }
 }

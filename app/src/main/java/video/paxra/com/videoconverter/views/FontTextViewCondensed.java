@@ -32,7 +32,7 @@ public class FontTextViewCondensed extends TextView {
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = FontCache.getTypeface("AvenirNextCondensed.ttf", context);
+        Typeface customFont = FontCache.getTypeface("resources/AvenirNextCondensed.ttf", context);
         setTypeface(customFont);
     }
 }

@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Aici la noi este SARATEANUL capatat caracoroci de lucru bla bla caci asta "
-        android:visibility="visible"
+        android:visibility="invisible"
         android:ellipsize="none"
         android:layout_weight="1"
         android:maxLines="5"

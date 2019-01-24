@@ -26,7 +26,7 @@ public class FontTextViewRegular extends android.support.v7.widget.AppCompatText
     }
 
     private void applyCustomFont(Context context) {
-        Typeface customFont = FontCache.getTypeface("AvenirNext-Regular.ttf", context);
+        Typeface customFont = FontCache.getTypeface("resources/AvenirNext-Regular.ttf", context);
         setTypeface(customFont);
     }
 }

@@ -46,8 +46,8 @@ public class EditFontActivity extends Activity {
     @BindView(R.id.color_box) RadioGroup colorRadioBox;
     @BindView(R.id.fonts_spinner) Spinner fontNameSpinner;
 
-    private String color = "";
-    private String fontName = "";
+    private String color = "yellow";
+    private String fontName = "font_simple.ttf";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,34 +85,33 @@ public class EditFontActivity extends Activity {
                 String font = fonts[position];
                 Typeface customFont = FontCache.getTypeface(fontsFile.get(font), EditFontActivity.this);
                 testText.setTypeface(customFont);
-                fontName = font;
+                fontName = fontsFile.get(font).replace("resources/", "");
             }
 
             @SuppressLint("ResourceType")
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                fontName = "0x" + fonts[0].substring(3);
-                color = getResources().getString(R.color.primaryYellow);
+
             }
         });
     }
 
     @OnClick(R.id.save_btn)
     public void saveChanges() {
-        SharedPref userPreferences = new SharedPref(this);
-        if (userPreferences.hasBoughtFonts()) {
+//        SharedPref userPreferences = new SharedPref(this);
+//        if (userPreferences.hasBoughtFonts()) {
             saveAndFinish();
             return;
-        }
+//        }
 
-        BuyDialog dialog = new BuyDialog(this, () -> {
-            String buyMessage = getString(R.string.success_buy);
-            Toast.makeText(EditFontActivity.this, buyMessage, Toast.LENGTH_LONG).show();
-            userPreferences.setHasBoughtFonts();
-            saveAndFinish();
-        });
-        dialog.show();
-        dialog.setCancelable(true);
+//        BuyDialog dialog = new BuyDialog(this, () -> {
+//            String buyMessage = getString(R.string.success_buy);
+//            Toast.makeText(EditFontActivity.this, buyMessage, Toast.LENGTH_LONG).show();
+//            userPreferences.setHasBoughtFonts();
+//            saveAndFinish();
+//        });
+//        dialog.show();
+//        dialog.setCancelable(true);
     }
 
     public void saveAndFinish() {

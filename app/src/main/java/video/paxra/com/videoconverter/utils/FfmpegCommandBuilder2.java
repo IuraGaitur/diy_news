@@ -126,7 +126,7 @@ public class FfmpegCommandBuilder2 {
         StringBuilder textCommand = new StringBuilder();
 
 
-        text = addHeadlineText(mTexts.get(TEXT_WHEN_POSITION), mTexts.get(TEXT_WHERE_POSITION));
+        text = addHeadlineText(mTexts.get(TEXT_WHEN_POSITION), mTexts.get(TEXT_WHERE_POSITION), color);
         textCommand.append(text);
 
         for (int pos = 2; pos < mTexts.size(); pos++) {
@@ -138,7 +138,7 @@ public class FfmpegCommandBuilder2 {
         return textCommand.toString();
     }
 
-    private String addHeadlineText(Answer whenAnswer, Answer whereAnswer) {
+    private String addHeadlineText(Answer whenAnswer, Answer whereAnswer, String color) {
         String headline = "";
         int videoDuration = mCropTo - mCropFrom;
 
@@ -146,11 +146,11 @@ public class FfmpegCommandBuilder2 {
         String whenFormatted = whenAnswer.getAnswer().replace(":", "\\:").replace("'", "'\\\\\\''");
 
         String whenText = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                        ":fontcolor=white:shadowcolor=black:shadowx=1:shadowy=1:fontsize=%d:x=(w-text_w)/1.07:y=30,",
+                        ":fontcolor=" + color + ":shadowcolor=black:shadowx=1:shadowy=1:fontsize=%d:x=(w-text_w)/1.07:y=30,",
                 0, videoDuration, mFontFile, whenFormatted, Constants.HEADER_FONT_SIZE);
         headline += whenText;
         String whereText = String.format("drawtext=enable='between(t,%d,%d)':fontfile=%s:text='%s'" +
-                        ":fontcolor=white:shadowcolor=black:shadowx=1:shadowy=1:fontsize=%d:x=(w-text_w)/1.07:y=35+th,",
+                        ":fontcolor=" + color + ":shadowcolor=black:shadowx=1:shadowy=1:fontsize=%d:x=(w-text_w)/1.07:y=35+th,",
                 0, videoDuration, mFontFile, whereFormatted, Constants.HEADER_FONT_SIZE);
         headline += whereText;
 

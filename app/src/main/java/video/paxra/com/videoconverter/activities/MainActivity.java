@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private int mVideoWidth = 0;
     private int mVideoHeight = 0;
 
-    String font = "font_simple";
+    String font = "font_simple.ttf";
     String color = "yellow";
 
     public static final int REQUEST_TRIM = 400;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_TRIM) {
             int[] result = data.getIntArrayExtra("data");
             Log.d("Result", result.toString());
-        } else if (requestCode == REQUEST_CHANGE_FONT && data.getExtras() != null) {
+        } else if (requestCode == REQUEST_CHANGE_FONT && data != null) {
             font = data.getExtras().getString(EXTRA_FONT);
             color = data.getExtras().getString(EXTRA_COLOR);
         }

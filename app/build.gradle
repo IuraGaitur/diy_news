@@ -22,8 +22,8 @@ android {
         applicationId "video.paxra.com.videoconverter"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 9
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -78,8 +78,6 @@ dependencies {
         transitive = true;
     }
 
-    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
-
     api 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
     api 'com.library.tangxiaolv:telegramgallery:1.0.5'
     api 'com.droidninja:filepicker:2.1.0'
@@ -89,3 +87,5 @@ dependencies {
 
     implementation 'com.android.billingclient:billing:1.2'
 }
+
+apply plugin: 'com.google.gms.google-services'

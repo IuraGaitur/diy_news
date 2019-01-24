@@ -19,11 +19,9 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.google.android.gms.wallet.PaymentsClient;
-import com.google.android.gms.wallet.Wallet;
-import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -34,13 +32,11 @@ import video.paxra.com.videoconverter.activities.TestPayActivity;
 public class BuyDialog extends Dialog implements PurchasesUpdatedListener {
 
     private final OnBuyListener onBuyListener;
-    private PaymentsClient mPaymentsClient;
     private boolean userBoughtWithSuccess = true;
 
-    private View mGooglePayButton;
     private BillingClient billingClient;
     private String[] skuList = {"GOLD_USER"};
-    private List<SkuDetails> skuDetailsList;
+    private List<SkuDetails> skuDetailsList = Collections.emptyList();
 
     public BuyDialog(Context context, OnBuyListener onBuyListener) {
         super(context);
@@ -57,17 +53,7 @@ public class BuyDialog extends Dialog implements PurchasesUpdatedListener {
         ButterKnife.bind(this);
         View v = getWindow().getDecorView();
         v.setBackgroundResource(android.R.color.transparent);
-        initPayment();
         setupBillingClient();
-    }
-
-    private void initPayment() {
-        mPaymentsClient =
-                Wallet.getPaymentsClient(
-                        this.getContext(),
-                        new Wallet.WalletOptions.Builder()
-                                .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
-                                .build());
     }
 
     @OnClick(R.id.buy_btn)

@@ -262,7 +262,7 @@ public class ConvertActivity extends AppCompatActivity implements Convertable {
 
   private void initTextViewComponent() {
     textView = findViewById(R.id.text);
-    Typeface customFont = FontCache.getTypeface(font, this);
+    Typeface customFont = FontCache.getTypeface("resources/" + font, this);
     textView.setTypeface(customFont);
     int width = mVideoWidth > mVideoHeight ? Constants.VIDEO_WIDTH : Constants.VIDEO_HEIGHT;
     textView.setLayoutParams(
