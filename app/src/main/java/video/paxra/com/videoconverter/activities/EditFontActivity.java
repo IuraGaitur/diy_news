@@ -98,20 +98,20 @@ public class EditFontActivity extends Activity {
 
     @OnClick(R.id.save_btn)
     public void saveChanges() {
-//        SharedPref userPreferences = new SharedPref(this);
-//        if (userPreferences.hasBoughtFonts()) {
+        SharedPref userPreferences = new SharedPref(this);
+        if (userPreferences.hasBoughtFonts()) {
             saveAndFinish();
             return;
-//        }
+        }
 
-//        BuyDialog dialog = new BuyDialog(this, () -> {
-//            String buyMessage = getString(R.string.success_buy);
-//            Toast.makeText(EditFontActivity.this, buyMessage, Toast.LENGTH_LONG).show();
-//            userPreferences.setHasBoughtFonts();
-//            saveAndFinish();
-//        });
-//        dialog.show();
-//        dialog.setCancelable(true);
+        BuyDialog dialog = new BuyDialog(EditFontActivity.this, () -> {
+            String buyMessage = getString(R.string.success_buy);
+            Toast.makeText(EditFontActivity.this, buyMessage, Toast.LENGTH_LONG).show();
+            userPreferences.setHasBoughtFonts();
+            saveAndFinish();
+        });
+        dialog.show();
+        dialog.setCancelable(true);
     }
 
     public void saveAndFinish() {

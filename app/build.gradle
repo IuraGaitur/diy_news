@@ -22,9 +22,10 @@ android {
         applicationId "video.paxra.com.videoconverter"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.4"
+        versionCode 13
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         debug {
@@ -46,6 +47,10 @@ android {
         main {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 

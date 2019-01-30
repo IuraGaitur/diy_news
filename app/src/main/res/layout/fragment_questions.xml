@@ -92,7 +92,7 @@
                     style="@style/edit_questions"
                     android:hint="@string/tip_2"
                     android:background="@android:color/transparent"
-                    android:text="Moldova, Ungheni"
+                    android:text=""
                     android:textCursorDrawable="@null" />
             </android.support.design.widget.TextInputLayout>
 
@@ -126,7 +126,7 @@
                     style="@style/edit_questions"
                     android:hint="@string/tip_3"
                     android:background="@android:color/transparent"
-                    android:text="Aici este un nou eveniment legat de renasterea imaginara a ascendentului"
+                    android:text=""
                     android:textCursorDrawable="@null"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -159,7 +159,7 @@
                     android:id="@+id/editText4"
                     style="@style/edit_questions"
                     android:hint="@string/tip_4"
-                    android:text="Pina atunci se calculeaza de cit timp este nevoie pentru a face un nou copu pentru senzationarea acestuia"
+                    android:text=""
                     android:background="@android:color/transparent"
                     android:textCursorDrawable="@null"/>
 
@@ -195,7 +195,7 @@
                     style="@style/edit_questions"
                     android:background="@android:color/transparent"
                     android:hint="@string/tip_5"
-                    android:text="Pentru care este o informatie si nu este aceeasi informatie"
+                    android:text=""
                     android:textCursorDrawable="@null" />
 
             </android.support.design.widget.TextInputLayout>
@@ -229,7 +229,7 @@
                     android:id="@+id/editText6"
                     style="@style/edit_questions"
                     android:background="@android:color/transparent"
-                    android:text="Aici este figli migli unde la noi vapshe este un text despre care la noi vine un text mare si mic"
+                    android:text=""
                     android:hint="@string/tip_6"
                     android:textCursorDrawable="@null" />
 

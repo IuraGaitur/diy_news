@@ -27,6 +27,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import video.paxra.com.videoconverter.R;
+import video.paxra.com.videoconverter.activities.EditFontActivity;
 import video.paxra.com.videoconverter.activities.TestPayActivity;
 
 public class BuyDialog extends Dialog implements PurchasesUpdatedListener {
@@ -35,11 +36,13 @@ public class BuyDialog extends Dialog implements PurchasesUpdatedListener {
     private boolean userBoughtWithSuccess = true;
 
     private BillingClient billingClient;
-    private String[] skuList = {"GOLD_USER"};
+    private String[] skuList = {"gold_user"};
     private List<SkuDetails> skuDetailsList = Collections.emptyList();
+    EditFontActivity activity = null;
 
     public BuyDialog(Context context, OnBuyListener onBuyListener) {
         super(context);
+        activity = (EditFontActivity) context;
         this.onBuyListener = onBuyListener;
     }
 
@@ -94,18 +97,25 @@ public class BuyDialog extends Dialog implements PurchasesUpdatedListener {
 
     @Override
     public void onPurchasesUpdated(int responseCode, List<Purchase> purchases) {
-        //println("onPurchasesUpdated: $responseCode")
-        allowMultiplePurchases(purchases);
-        this.onBuyListener.boughtWithSuccess();
+        if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+            allowMultiplePurchases(purchases);
+        }
+
+
     }
 
     private void allowMultiplePurchases(List<Purchase> purchases) {
+        if (purchases == null) {
+            return;
+        }
+
         Purchase purchase = purchases.get(0);
         if (purchase != null) {
             billingClient.consumeAsync(purchase.getPurchaseToken(), new ConsumeResponseListener() {
                 @Override
                 public void onConsumeResponse(int responseCode, String purchaseToken) {
                     if (responseCode == BillingClient.BillingResponse.OK && purchaseToken != null) {
+                        BuyDialog.this.onBuyListener.boughtWithSuccess();
                         Log.d("App", "AllowMultiplePurchases success, responseCode: $responseCode");
                     } else {
                         Log.d("App", "Can't allowMultiplePurchases, responseCode: $responseCode");
@@ -148,7 +158,7 @@ public class BuyDialog extends Dialog implements PurchasesUpdatedListener {
                 .newBuilder()
                 .setSkuDetails(details)
                 .build();
-        billingClient.launchBillingFlow(this.getOwnerActivity(), billingFlowParams);
+        billingClient.launchBillingFlow(activity, billingFlowParams);
     }
 
     private void removeGoldUser() {
